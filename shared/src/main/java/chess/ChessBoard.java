@@ -7,7 +7,10 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ChessPiece myBoard[][] = new ChessPiece[8][8];
+    private static int BOARD_HEIGHT = 8;
+    private static int BOARD_WIDTH = 8;
+    private ChessPiece myBoard[][] = new ChessPiece[BOARD_HEIGHT][BOARD_WIDTH];
+
     public ChessBoard() {
 
     }
@@ -19,7 +22,12 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        myBoard[position.getRow()-1][position.getColumn()-1] = piece;
+        if (position.getColumn()-1 >= 0 && position.getColumn()-1 <= BOARD_WIDTH - 1
+            && position.getRow()-1 >= 0 && position.getRow()-1 <= BOARD_HEIGHT - 1) {
+            if (myBoard[position.getRow()-1][position.getColumn()-1] != null){
+                myBoard[position.getRow()-1][position.getColumn()-1] = piece;
+            }
+        }
     }
 
     /**
