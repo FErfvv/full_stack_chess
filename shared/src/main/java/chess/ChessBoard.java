@@ -11,6 +11,9 @@ public class ChessBoard {
     private static final int BOARD_WIDTH = 8;
     private ChessPiece myBoard[][] = new ChessPiece[BOARD_HEIGHT][BOARD_WIDTH];
 
+    private static final ChessPiece.PieceType DEFAULT_CONFIG[][] = {{ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK},
+                                                    {ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN}};
+
     public ChessBoard() {
 
     }
@@ -38,7 +41,11 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        if (position.getColumn()-1 >= 0 && position.getColumn()-1 <= BOARD_WIDTH - 1
+                && position.getRow()-1 >= 0 && position.getRow()-1 <= BOARD_HEIGHT - 1) {
+            return myBoard[position.getRow()-1][position.getColumn()-1];
+        }
+        throw new IndexOutOfBoundsException();
     }
 
     /**
@@ -46,7 +53,12 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        for (int r = 0; r < 2; r++) {
+            for (int c = 0; c < BOARD_WIDTH; c++) {
+                myBoard[r][c] = new ChessPiece(ChessGame.TeamColor.WHITE, DEFAULT_CONFIG[r][c]);
+                myBoard[BOARD_HEIGHT-r-1][BOARD_WIDTH-c-1] = new ChessPiece(ChessGame.TeamColor.BLACK, DEFAULT_CONFIG[r][c]);
+            }
+        }
     }
 
     public void printBoard() {
