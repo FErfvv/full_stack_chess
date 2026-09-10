@@ -56,7 +56,7 @@ public class ChessBoard {
         for (int r = 0; r < 2; r++) {
             for (int c = 0; c < BOARD_WIDTH; c++) {
                 myBoard[r][c] = new ChessPiece(ChessGame.TeamColor.WHITE, DEFAULT_CONFIG[r][c]);
-                myBoard[BOARD_HEIGHT-r-1][BOARD_WIDTH-c-1] = new ChessPiece(ChessGame.TeamColor.BLACK, DEFAULT_CONFIG[r][c]);
+                myBoard[BOARD_HEIGHT-r-1][c] = new ChessPiece(ChessGame.TeamColor.BLACK, DEFAULT_CONFIG[r][c]);
             }
         }
     }
@@ -68,7 +68,27 @@ public class ChessBoard {
                 if (myBoard[row][col] == null) {
                     System.out.print(" |");
                 } else {
-                    System.out.print("x|");
+                    switch (myBoard[row][col].getPieceType()) {
+                        case PAWN:
+                            System.out.print("p|");
+                            break;
+                        case ROOK:
+                            System.out.print("r|");
+                            break;
+                        case KNIGHT:
+                            System.out.print("n|");
+                            break;
+                        case BISHOP:
+                            System.out.print("b|");
+                            break;
+                        case KING:
+                            System.out.print("k|");
+                            break;
+                        case QUEEN:
+                            System.out.print("q|");
+                            break;
+                    }
+
                 }
             }
             System.out.print("\n");
