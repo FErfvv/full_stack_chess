@@ -100,16 +100,6 @@ public class ChessBoard {
         return boardString;
     }
 
-    public ChessPiece[][] getMyBoard() {
-        ChessPiece copiedBoard[][] = new ChessPiece[BOARD_HEIGHT][BOARD_WIDTH];
-        for (int r = 0; r < BOARD_HEIGHT; r++) {
-            for (int c = 0; c < BOARD_WIDTH; c++) {
-                copiedBoard[r][c] = myBoard[r][c];
-            }
-        }
-        return copiedBoard;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
