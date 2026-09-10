@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -61,37 +64,63 @@ public class ChessBoard {
         }
     }
 
-    public void printBoard() {
+    @Override
+    public String toString() {
+        String boardString = "";
         for (int row = 0; row < BOARD_HEIGHT; row++) {
-            System.out.print("|");
+            boardString += "|";
             for (int col = 0; col < BOARD_WIDTH; col++) {
                 if (myBoard[row][col] == null) {
-                    System.out.print(" |");
+                    boardString += " |";
                 } else {
                     switch (myBoard[row][col].getPieceType()) {
                         case PAWN:
-                            System.out.print("p|");
+                            boardString += "p|";
                             break;
                         case ROOK:
-                            System.out.print("r|");
+                            boardString += "r|";
                             break;
                         case KNIGHT:
-                            System.out.print("n|");
+                            boardString += "n|";
                             break;
                         case BISHOP:
-                            System.out.print("b|");
+                            boardString += "b|";
                             break;
                         case KING:
-                            System.out.print("k|");
+                            boardString += "k|";
                             break;
                         case QUEEN:
-                            System.out.print("q|");
+                            boardString += "q|";
                             break;
                     }
-
                 }
             }
-            System.out.print("\n");
+            boardString += "\n";
         }
+        return boardString;
+    }
+
+    public ChessPiece[][] getMyBoard() {
+        ChessPiece copiedBoard[][] = new ChessPiece[BOARD_HEIGHT][BOARD_WIDTH];
+        for (int r = 0; r < BOARD_HEIGHT; r++) {
+            for (int c = 0; c < BOARD_WIDTH; c++) {
+                copiedBoard[r][c] = myBoard[r][c];
+            }
+        }
+        return copiedBoard;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(myBoard, that.myBoard);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(myBoard);
     }
 }
