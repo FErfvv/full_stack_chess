@@ -1,7 +1,10 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
+
+import static java.util.Map.entry;
 
 /**
  * Represents a single chess piece
@@ -13,6 +16,19 @@ public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
+    private static final Map<String,int[]> deltaMoves = Map.ofEntries(
+            entry("N", new int[] {0, 1}),
+            entry("NE", new int[] {1, 1}),
+            entry("N", new int[] {0, 1}),
+            entry("E", new int[] {1, 0}),
+            entry("SE", new int[] {1, -1}),
+            entry("S", new int[] {0, -1}),
+            entry("SW", new int[] {-1, -1}),
+            entry("W", new int[] {-1, 0}),
+            entry("NW", new int[] {-1, 1})
+    );
+
+
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
