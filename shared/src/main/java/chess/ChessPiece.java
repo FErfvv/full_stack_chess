@@ -19,7 +19,6 @@ public class ChessPiece {
     private static final Map<String,int[]> deltaMoves = Map.ofEntries(
             entry("N", new int[] {0, 1}),
             entry("NE", new int[] {1, 1}),
-            entry("N", new int[] {0, 1}),
             entry("E", new int[] {1, 0}),
             entry("SE", new int[] {1, -1}),
             entry("S", new int[] {0, -1}),
@@ -27,8 +26,13 @@ public class ChessPiece {
             entry("W", new int[] {-1, 0}),
             entry("NW", new int[] {-1, 1})
     );
-
-
+    // Describes in which directions that peices can move
+    // Index 0 describes whether it moves one space (0) or multiple spaces (1)
+    private static final String[] rookProfile = {"1", "N", "E", "S", "W"};
+    private static final String[] kingProfile = {"0","N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+    private static final String[] queenPofile = {"1","N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+    private static final String[] bishopProfile = {"1", "NE", "SE", "SW", "NW"};
+    private static final String[] pawnProfile = {"0", "N"};
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
