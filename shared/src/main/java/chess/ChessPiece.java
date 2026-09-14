@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -28,11 +29,14 @@ public class ChessPiece {
     );
     // Describes in which directions that peices can move
     // Index 0 describes whether it moves one space (0) or multiple spaces (1)
-    private static final String[] rookProfile = {"1", "N", "E", "S", "W"};
-    private static final String[] kingProfile = {"0","N", "NE", "E", "SE", "S", "SW", "W", "NW"};
-    private static final String[] queenPofile = {"1","N", "NE", "E", "SE", "S", "SW", "W", "NW"};
-    private static final String[] bishopProfile = {"1", "NE", "SE", "SW", "NW"};
-    private static final String[] pawnProfile = {"0", "N"};
+    private static final Map<String, String[]> profiles = Map.ofEntries(
+            entry("r",new String[] {"1", "N", "E", "S", "W"}),
+            entry("k", new String[] {"0","N", "NE", "E", "SE", "S", "SW", "W", "NW"}),
+            entry("q", new String[] {"1","N", "NE", "E", "SE", "S", "SW", "W", "NW"}),
+            entry("b", new String[] {"1", "NE", "SE", "SW", "NW"}),
+            entry("p", new String[] {"0", "N"}),
+            entry("kn", new String[] {})
+    );
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
@@ -97,4 +101,14 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented");
     }
+
+    private int[] getOpenSpaces(String[] profile) {
+        int run = Integer.parseInt(Arrays.copyOfRange(profile,0,1)[0]);
+        String[] profileMoves = Arrays.copyOfRange(profile,1,profile.length);
+        for (String delta: profileMoves) {
+
+        }
+    }
+
+
 }
