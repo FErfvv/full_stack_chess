@@ -97,22 +97,24 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece myPiece = board.getPiece(myPosition);
-        getOpenSpaces(profiles.get(myPiece.getPieceType()),board, myPosition);
-        List<ChessMove> xy = new ArrayList<>();
-        return xy;
+        List<ChessMove> myMoves = new ArrayList<>();
+        getOpenSpaces(profiles.get(myPiece.getPieceType()),board, myPosition,myMoves);
+        for (ChessMove move: myMoves) {
+            System.out.println(move);
+        }
+        return myMoves;
     }
 
-    private int[] getOpenSpaces(String[] profile, ChessBoard board, ChessPosition myPosition) {
+    private void getOpenSpaces(String[] profile, ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves) {
         int[][] moves;
         int run = Integer.parseInt(Arrays.copyOfRange(profile,0,1)[0]);
         String[] profileMoves = Arrays.copyOfRange(profile,1,profile.length);
         for (String direction: profileMoves) {
-            move(direction,run,board, myPosition);
+            move(direction,run,board, myPosition,myMoves);
         }
-        return new int[] {0,0};
     }
 
-    private int[] move(String direction, int run, ChessBoard board, ChessPosition myPosition) {
+    private void move(String direction, int run, ChessBoard board, ChessPosition myPosition,List<ChessMove> myMoves) {
         int[][] moves;
         int deltaCol = deltaMoves.get(direction)[0];
         int deltaRow = deltaMoves.get(direction)[1];
@@ -120,11 +122,20 @@ public class ChessPiece {
         System.out.println("Delta Row: " + deltaRow);
         int col = myPosition.getColumn() + deltaCol;
         int row = myPosition.getRow() + deltaRow;
-        ChessPiece target = board.getMyBoard()[row][col];
-        while (col > 0 && col < 8 && target != null) {
+        if (col > 0 && col < board.BOARD_WIDTH + 1 && row > 0 && row < board.BOARD_HEIGHT + 1) {
+            ChessPiece target = board.getMyBoard()[row-1][col-1];
 
+            while (col > 0 && col < board.BOARD_WIDTH + 1 && row > 0 && row < board.BOARD_HEIGHT + 1 && (target == null || target.getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
+                myMoves.add(new ChessMove(myPosition,new ChessPosition(row,col), null));
+                if (run == 0){
+                    break;
+                }
+                col += deltaCol;
+                row += deltaRow;
+            }
         }
-        return new int[] {0,0};
+
+
     }
 
 }
