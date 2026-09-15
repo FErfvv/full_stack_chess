@@ -10,8 +10,8 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private static final int BOARD_HEIGHT = 8;
-    private static final int BOARD_WIDTH = 8;
+    public static final int BOARD_HEIGHT = 8;
+    public static final int BOARD_WIDTH = 8;
     private ChessPiece myBoard[][] = new ChessPiece[BOARD_HEIGHT][BOARD_WIDTH];
 
     private static final ChessPiece.PieceType DEFAULT_CONFIG[][] = {{ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK},
@@ -112,5 +112,9 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(myBoard);
+    }
+
+    public ChessPiece[][] getMyBoard() {
+        return myBoard;
     }
 }
