@@ -1,9 +1,7 @@
 package chess;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import java.text.CollationElementIterator;
+import java.util.*;
 
 import static java.util.Map.entry;
 
@@ -14,7 +12,6 @@ import static java.util.Map.entry;
  * signature of the existing methods.
  */
 public class ChessPiece {
-
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
     private static final Map<String,int[]> deltaMoves = Map.ofEntries(
@@ -29,13 +26,13 @@ public class ChessPiece {
     );
     // Describes in which directions that peices can move
     // Index 0 describes whether it moves one space (0) or multiple spaces (1)
-    private static final Map<String, String[]> profiles = Map.ofEntries(
-            entry("r",new String[] {"1", "N", "E", "S", "W"}),
-            entry("k", new String[] {"0","N", "NE", "E", "SE", "S", "SW", "W", "NW"}),
-            entry("q", new String[] {"1","N", "NE", "E", "SE", "S", "SW", "W", "NW"}),
-            entry("b", new String[] {"1", "NE", "SE", "SW", "NW"}),
-            entry("p", new String[] {"0", "N"}),
-            entry("kn", new String[] {})
+    private static final Map<Enum, String[]> profiles = Map.ofEntries(
+            entry(PieceType.ROOK,new String[] {"1", "N", "E", "S", "W"}),
+            entry(PieceType.KING, new String[] {"0","N", "NE", "E", "SE", "S", "SW", "W", "NW"}),
+            entry(PieceType.QUEEN, new String[] {"1","N", "NE", "E", "SE", "S", "SW", "W", "NW"}),
+            entry(PieceType.BISHOP, new String[] {"1", "NE", "SE", "SW", "NW"}),
+            entry(PieceType.PAWN, new String[] {"0", "N"}),
+            entry(PieceType.KNIGHT, new String[] {})
     );
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -99,16 +96,35 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece myPiece = board.getPiece(myPosition);
+        getOpenSpaces(profiles.get(myPiece.getPieceType()),board, myPosition);
+        List<ChessMove> xy = new ArrayList<>();
+        return xy;
     }
 
-    private int[] getOpenSpaces(String[] profile) {
+    private int[] getOpenSpaces(String[] profile, ChessBoard board, ChessPosition myPosition) {
+        int[][] moves;
         int run = Integer.parseInt(Arrays.copyOfRange(profile,0,1)[0]);
         String[] profileMoves = Arrays.copyOfRange(profile,1,profile.length);
-        for (String delta: profileMoves) {
-
+        for (String direction: profileMoves) {
+            move(direction,run,board, myPosition);
         }
+        return new int[] {0,0};
     }
 
+    private int[] move(String direction, int run, ChessBoard board, ChessPosition myPosition) {
+        int[][] moves;
+        int deltaCol = deltaMoves.get(direction)[0];
+        int deltaRow = deltaMoves.get(direction)[1];
+        System.out.println("Delta Column: " + deltaCol);
+        System.out.println("Delta Row: " + deltaRow);
+        int col = myPosition.getColumn() + deltaCol;
+        int row = myPosition.getRow() + deltaRow;
+        ChessPiece target = board.getMyBoard()[row][col];
+        while (col > 0 && col < 8 && target != null) {
+
+        }
+        return new int[] {0,0};
+    }
 
 }
