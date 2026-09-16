@@ -126,12 +126,22 @@ public class ChessPiece {
             ChessPiece target = board.getMyBoard()[row-1][col-1];
 
             while (col > 0 && col < board.BOARD_WIDTH + 1 && row > 0 && row < board.BOARD_HEIGHT + 1 && (target == null || target.getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
+
                 myMoves.add(new ChessMove(myPosition,new ChessPosition(row,col), null));
                 if (run == 0){
                     break;
                 }
+                if (target != null) {
+                    break;
+                }
                 col += deltaCol;
                 row += deltaRow;
+                if (col > 0 && col < board.BOARD_WIDTH + 1 && row > 0 && row < board.BOARD_HEIGHT + 1) {
+                    target = board.getMyBoard()[row-1][col-1];
+                }
+
+
+
             }
         }
 
