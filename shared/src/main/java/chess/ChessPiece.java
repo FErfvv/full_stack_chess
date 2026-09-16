@@ -24,15 +24,15 @@ public class ChessPiece {
             entry("W", new int[] {-1, 0}),
             entry("NW", new int[] {-1, 1})
     );
+
     // Describes in which directions that peices can move
     // Index 0 describes whether it moves one space (0) or multiple spaces (1)
-    private static final Map<Enum, String[]> profiles = Map.ofEntries(
-            entry(PieceType.ROOK,new String[] {"1", "N", "E", "S", "W"}),
-            entry(PieceType.KING, new String[] {"0","N", "NE", "E", "SE", "S", "SW", "W", "NW"}),
-            entry(PieceType.QUEEN, new String[] {"1","N", "NE", "E", "SE", "S", "SW", "W", "NW"}),
-            entry(PieceType.BISHOP, new String[] {"1", "NE", "SE", "SW", "NW"}),
-            entry(PieceType.PAWN, new String[] {"0", "N"}),
-            entry(PieceType.KNIGHT, new String[] {})
+    private static final Map<Enum, int[][]> profiles = Map.ofEntries(
+            entry(PieceType.ROOK,new int[][] {{1}, {0, 1}, {1, 0}, {0, -1}, {-1, 0}}),
+            entry(PieceType.KING, new int [][] {{0},{0, 1}, {1, 1}, {1, 0}, {1,-1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}),
+            entry(PieceType.QUEEN, new int [][] {{1},{0, 1}, {1, 1}, {1, 0}, {1,-1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}),
+            entry(PieceType.BISHOP, new int [][] {{1}, {1, 1}, {1,-1}, {-1, -1}, {-1, 1}}),
+            entry(PieceType.KNIGHT, new int [][] {{0}, })
     );
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -99,24 +99,20 @@ public class ChessPiece {
         ChessPiece myPiece = board.getPiece(myPosition);
         List<ChessMove> myMoves = new ArrayList<>();
         getOpenSpaces(profiles.get(myPiece.getPieceType()),board, myPosition,myMoves);
-        for (ChessMove move: myMoves) {
-            System.out.println(move);
-        }
         return myMoves;
     }
 
-    private void getOpenSpaces(String[] profile, ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves) {
-        int[][] moves;
-        int run = Integer.parseInt(Arrays.copyOfRange(profile,0,1)[0]);
-        String[] profileMoves = Arrays.copyOfRange(profile,1,profile.length);
-        for (String direction: profileMoves) {
+    private void getOpenSpaces(int[][] profile, ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves) {
+        int run = profile[0][0];
+        int[][] profileMoves = Arrays.copyOfRange(profile,1,profile.length);
+        for (int[] direction: profileMoves) {
             move(direction,run,board, myPosition,myMoves);
         }
     }
 
-    private void move(String direction, int run, ChessBoard board, ChessPosition myPosition,List<ChessMove> myMoves) {
-        int deltaCol = deltaMoves.get(direction)[0];
-        int deltaRow = deltaMoves.get(direction)[1];
+    private void move(int[] direction, int run, ChessBoard board, ChessPosition myPosition,List<ChessMove> myMoves) {
+        int deltaCol = direction[0];
+        int deltaRow = direction[1];
         System.out.println("Delta Column: " + deltaCol);
         System.out.println("Delta Row: " + deltaRow);
         int col = myPosition.getColumn() + deltaCol;
