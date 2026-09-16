@@ -115,37 +115,25 @@ public class ChessPiece {
     }
 
     private void move(String direction, int run, ChessBoard board, ChessPosition myPosition,List<ChessMove> myMoves) {
-        int[][] moves;
         int deltaCol = deltaMoves.get(direction)[0];
         int deltaRow = deltaMoves.get(direction)[1];
         System.out.println("Delta Column: " + deltaCol);
         System.out.println("Delta Row: " + deltaRow);
         int col = myPosition.getColumn() + deltaCol;
         int row = myPosition.getRow() + deltaRow;
-        if (col > 0 && col < board.BOARD_WIDTH + 1 && row > 0 && row < board.BOARD_HEIGHT + 1) {
-            ChessPiece target = board.getMyBoard()[row-1][col-1];
 
-            while (col > 0 && col < board.BOARD_WIDTH + 1 && row > 0 && row < board.BOARD_HEIGHT + 1 && (target == null || target.getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
+        while (col > 0 && col < board.BOARD_WIDTH + 1 && row > 0 && row < board.BOARD_HEIGHT + 1 && (board.getMyBoard()[row-1][col-1] == null || board.getMyBoard()[row-1][col-1].getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
 
-                myMoves.add(new ChessMove(myPosition,new ChessPosition(row,col), null));
-                if (run == 0){
-                    break;
-                }
-                if (target != null) {
-                    break;
-                }
-                col += deltaCol;
-                row += deltaRow;
-                if (col > 0 && col < board.BOARD_WIDTH + 1 && row > 0 && row < board.BOARD_HEIGHT + 1) {
-                    target = board.getMyBoard()[row-1][col-1];
-                }
-
-
-
+            myMoves.add(new ChessMove(myPosition,new ChessPosition(row,col), null));
+            if (run == 0){
+                break;
             }
+            if (board.getMyBoard()[row-1][col-1] != null) {
+                break;
+            }
+            col += deltaCol;
+            row += deltaRow;
         }
-
-
     }
 
 }
