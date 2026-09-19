@@ -14,8 +14,23 @@ public class ChessBoard {
     public static final int BOARD_WIDTH = 8;
     private ChessPiece myBoard[][] = new ChessPiece[BOARD_HEIGHT][BOARD_WIDTH];
 
-    private static final ChessPiece.PieceType DEFAULT_CONFIG[][] = {{ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK},
-                                                    {ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN, ChessPiece.PieceType.PAWN}};
+    private static final ChessPiece.PieceType DEFAULT_CONFIG[][] =
+            {{ChessPiece.PieceType.ROOK,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.QUEEN,
+                ChessPiece.PieceType.KING,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.ROOK},
+            {ChessPiece.PieceType.PAWN,
+                ChessPiece.PieceType.PAWN,
+                ChessPiece.PieceType.PAWN,
+                ChessPiece.PieceType.PAWN,
+                ChessPiece.PieceType.PAWN,
+                ChessPiece.PieceType.PAWN,
+                ChessPiece.PieceType.PAWN,
+                ChessPiece.PieceType.PAWN}};
 
     public ChessBoard() {
 

@@ -1,6 +1,5 @@
 package chess;
 
-import java.text.CollationElementIterator;
 import java.util.*;
 
 import static java.util.Map.entry;
@@ -17,7 +16,7 @@ public class ChessPiece {
 
     // Describes in which directions that peices can move
     // Index 0 describes whether it moves one space (0) or multiple spaces (1)
-    private static final Map<Enum, int[][]> profiles = Map.ofEntries(
+    private static final Map<Enum, int[][]> PROFILES = Map.ofEntries(
             entry(PieceType.ROOK,new int[][] {{1}, {0, 1}, {1, 0}, {0, -1}, {-1, 0}}),
             entry(PieceType.KING, new int [][] {{0},{0, 1}, {1, 1}, {1, 0}, {1,-1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}),
             entry(PieceType.QUEEN, new int [][] {{1},{0, 1}, {1, 1}, {1, 0}, {1,-1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}),
@@ -91,7 +90,7 @@ public class ChessPiece {
         if (myPiece.getPieceType() == PieceType.PAWN) {
             checkPawn(board,myPosition,myMoves);
         } else {
-            getOpenSpaces(profiles.get(myPiece.getPieceType()),board, myPosition,myMoves);
+            getOpenSpaces(PROFILES.get(myPiece.getPieceType()),board, myPosition,myMoves);
         }
 
         return myMoves;
@@ -113,7 +112,10 @@ public class ChessPiece {
         int col = myPosition.getColumn() + deltaCol;
         int row = myPosition.getRow() + deltaRow;
 
-        while (col > 0 && col < board.BOARD_WIDTH + 1 && row > 0 && row < board.BOARD_HEIGHT + 1 && (board.getMyBoard()[row-1][col-1] == null || board.getMyBoard()[row-1][col-1].getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
+        while (col > 0 && col < board.BOARD_WIDTH + 1
+                && row > 0 && row < board.BOARD_HEIGHT + 1
+                && (board.getMyBoard()[row-1][col-1] == null
+                || board.getMyBoard()[row-1][col-1].getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
 
             myMoves.add(new ChessMove(myPosition,new ChessPosition(row,col), null));
             if (run == 0){
