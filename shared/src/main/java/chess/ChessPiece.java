@@ -132,14 +132,13 @@ public class ChessPiece {
         if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
             direction = -1;
         }
-        List<ChessPosition> movePositions = new ArrayList<ChessPosition>();
         int rowMove1 = myPosition.getRow() + direction;
         if (rowMove1 > 0 && rowMove1 < 8) {
             ChessPosition movePos1 = new ChessPosition(rowMove1,myPosition.getColumn());
             ChessPiece move1 = board.getPiece(movePos1);
             if (move1 == null) {
                 myMoves.add(new ChessMove(myPosition,movePos1,null));
-                if (myPosition.getRow() == (direction == 1 ? 2 : 6)) {
+                if (myPosition.getRow() == (direction == 1 ? 2 : 7)) {
                     int rowMove2 = myPosition.getRow() + (direction*2);
                     ChessPosition movePos2 = new ChessPosition(rowMove2,myPosition.getColumn());
                     ChessPiece move2 = board.getPiece(movePos2);
