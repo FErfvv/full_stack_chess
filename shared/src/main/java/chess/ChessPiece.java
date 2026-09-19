@@ -149,14 +149,14 @@ public class ChessPiece {
                 }
                 int colMoveLeft = myPosition.getRow() - 1;
                 int colMoveRight = myPosition.getRow() + 1;
-                if (colMoveLeft > 0 && colMoveLeft < 8) {
+                if (colMoveLeft > 0 && colMoveLeft < 9) {
                     ChessPosition movePosLeft = new ChessPosition(rowMove1,colMoveLeft);
                     ChessPiece moveLeft = board.getPiece(movePosLeft);
                     if (moveLeft != null && moveLeft.getTeamColor() != this.getTeamColor()) {
                         myMoves.add(new ChessMove(myPosition,movePosLeft,null));
                     }
                 }
-                if (colMoveRight > 0 && colMoveRight < 8) {
+                if (colMoveRight > 0 && colMoveRight < 9) {
                     ChessPosition movePosRight = new ChessPosition(rowMove1,colMoveRight);
                     ChessPiece moveRight = board.getPiece(movePosRight);
                     if (moveRight != null && moveRight.getTeamColor() != this.getTeamColor()) {
