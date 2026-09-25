@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PawnMoveProfile extends ProfileTemplate{
+public class PawnMoveProfile extends PieceProfileTemplate {
     public PawnMoveProfile() {
         super(false, new int [][] {{-1,1}, {1,1}, {0, 1}, {0, 2}});
     }

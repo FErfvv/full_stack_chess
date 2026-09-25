@@ -4,14 +4,13 @@ import chess.ChessBoard;
 import chess.ChessMove;
 import chess.ChessPosition;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class ProfileTemplate {
+public class PieceProfileTemplate {
     public boolean IS_CONTINUOUS;
     public int[][] MOVEMENT_PROFILE;
 
-    public ProfileTemplate(boolean cont, int[][] prof) {
+    public PieceProfileTemplate(boolean cont, int[][] prof) {
         IS_CONTINUOUS = cont;
         MOVEMENT_PROFILE = prof;
     }

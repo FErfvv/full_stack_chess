@@ -16,7 +16,7 @@ public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
 
-    private static final Map<Enum, ProfileTemplate> PIECE_PROFILES = Map.ofEntries(
+    private static final Map<Enum, PieceProfileTemplate> PIECE_PROFILES = Map.ofEntries(
             entry(PieceType.ROOK,new RookMoveProfile()),
             entry(PieceType.KING, new KingMoveProfile()),
             entry(PieceType.QUEEN, new QueenMoveProfile()),
