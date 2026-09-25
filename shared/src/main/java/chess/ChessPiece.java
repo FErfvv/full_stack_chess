@@ -16,16 +16,6 @@ public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
 
-    // Describes in which directions that peices can move
-    // Index 0 describes whether it moves one space (0) or multiple spaces (1)
-    private static final Map<Enum, int[][]> PROFILES = Map.ofEntries(
-            entry(PieceType.ROOK,new int[][] {{1}, {0, 1}, {1, 0}, {0, -1}, {-1, 0}}),
-            entry(PieceType.KING, new int [][] {{0},{0, 1}, {1, 1}, {1, 0}, {1,-1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}),
-            entry(PieceType.QUEEN, new int [][] {{1},{0, 1}, {1, 1}, {1, 0}, {1,-1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}),
-            entry(PieceType.BISHOP, new int [][] {{1}, {1, 1}, {1,-1}, {-1, -1}, {-1, 1}}),
-            entry(PieceType.KNIGHT, new int [][] {{0}, {-1,2},{1,2},{2,1},{2,-1},{1,-2},{-1,-2},{-2,1},{-2,-1}})
-    );
-
     private static final Map<Enum, ProfileTemplate> PIECE_PROFILES = Map.ofEntries(
             entry(PieceType.ROOK,new RookMoveProfile()),
             entry(PieceType.KING, new KingMoveProfile()),
