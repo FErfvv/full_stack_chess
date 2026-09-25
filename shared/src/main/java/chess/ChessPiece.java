@@ -1,5 +1,7 @@
 package chess;
 
+import chess.PieceProfiles.*;
+
 import java.util.*;
 
 import static java.util.Map.entry;
@@ -22,6 +24,15 @@ public class ChessPiece {
             entry(PieceType.QUEEN, new int [][] {{1},{0, 1}, {1, 1}, {1, 0}, {1,-1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}),
             entry(PieceType.BISHOP, new int [][] {{1}, {1, 1}, {1,-1}, {-1, -1}, {-1, 1}}),
             entry(PieceType.KNIGHT, new int [][] {{0}, {-1,2},{1,2},{2,1},{2,-1},{1,-2},{-1,-2},{-2,1},{-2,-1}})
+    );
+
+    private static final Map<Enum, ProfileTemplate> PIECE_PROFILES = Map.ofEntries(
+            entry(PieceType.ROOK,new RookMoveProfile()),
+            entry(PieceType.KING, new KingMoveProfile()),
+            entry(PieceType.QUEEN, new QueenMoveProfile()),
+            entry(PieceType.BISHOP, new BishopMoveProfile()),
+            entry(PieceType.KNIGHT, new KnightMoveProfile()),
+            entry(PieceType.PAWN, new PawnMoveProfile())
     );
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -85,13 +96,16 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+
         ChessPiece myPiece = board.getPiece(myPosition);
         List<ChessMove> myMoves = new ArrayList<>();
-        if (myPiece.getPieceType() == PieceType.PAWN) {
-            checkPawnMoves(board,myPosition,myMoves);
-        } else {
-            getOpenSpaces(PROFILES.get(myPiece.getPieceType()),board, myPosition,myMoves);
-        }
+
+        PIECE_PROFILES.get(myPiece.getPieceType()).checkMoves(board,myPosition,myMoves);
+//        if (myPiece.getPieceType() == PieceType.PAWN) {
+//            checkPawnMoves(board,myPosition,myMoves);
+//        } else {
+//            getOpenSpaces(PROFILES.get(myPiece.getPieceType()),board, myPosition,myMoves);
+//        }
 
         return myMoves;
     }
