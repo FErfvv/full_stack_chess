@@ -19,10 +19,10 @@ public class PawnMoveProfile extends ProfileTemplate{
             direction = -1;
         }
         Map<String, int[]> pawnProfile = Map.ofEntries(
-                Map.entry("left",MOVEMENT_PROFILE[0]),
-                Map.entry("right",MOVEMENT_PROFILE[1]),
-                Map.entry("forward1",MOVEMENT_PROFILE[2]),
-                Map.entry("forward2",MOVEMENT_PROFILE[3])
+                Map.entry("left",super.MOVEMENT_PROFILE[0]),
+                Map.entry("right",super.MOVEMENT_PROFILE[1]),
+                Map.entry("forward1",super.MOVEMENT_PROFILE[2]),
+                Map.entry("forward2",super.MOVEMENT_PROFILE[3])
         );
         List<String> movesOnMap = new ArrayList<>();
         for (String move: allMoves) {

@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ProfileTemplate {
-    public static boolean IS_CONTINUOUS;
-    public static int[][] MOVEMENT_PROFILE;
+    public boolean IS_CONTINUOUS;
+    public int[][] MOVEMENT_PROFILE;
 
     public ProfileTemplate(boolean cont, int[][] prof) {
         IS_CONTINUOUS = cont;
@@ -25,6 +25,8 @@ public class ProfileTemplate {
     private void move(int[] direction, ChessBoard board, ChessPosition myPosition,List<ChessMove> myMoves) {
         int deltaCol = direction[0];
         int deltaRow = direction[1];
+
+        System.out.println("(COL: " + deltaCol + ", ROW: " + deltaRow + ")");
         int col = myPosition.getColumn() + deltaCol;
         int row = myPosition.getRow() + deltaRow;
 
@@ -33,7 +35,7 @@ public class ProfileTemplate {
                 || board.getMyBoard()[row-1][col-1].getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
 
             myMoves.add(new ChessMove(myPosition,new ChessPosition(row,col), null));
-            if (IS_CONTINUOUS){
+            if (!IS_CONTINUOUS){
                 break;
             }
             if (board.getMyBoard()[row-1][col-1] != null) {
