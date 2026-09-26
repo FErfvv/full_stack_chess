@@ -29,7 +29,7 @@ public class PieceProfileTemplate {
         int col = myPosition.getColumn() + deltaCol;
         int row = myPosition.getRow() + deltaRow;
 
-        while (isOnBoard(row,col)
+        while (ChessBoard.isOnBoard(row,col)
                 && (board.getMyBoard()[row-1][col-1] == null
                 || board.getMyBoard()[row-1][col-1].getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
 
@@ -43,9 +43,5 @@ public class PieceProfileTemplate {
             col += deltaCol;
             row += deltaRow;
         }
-    }
-
-    public boolean isOnBoard(int row, int col) {
-        return (row > 0 && row < ChessBoard.BOARD_HEIGHT + 1 && col > 0 && col < ChessBoard.BOARD_WIDTH + 1);
     }
 }

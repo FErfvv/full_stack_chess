@@ -28,7 +28,7 @@ public class PawnMoveProfile extends PieceProfileTemplate {
         for (String move: allMoves) {
             int col = myPosition.getColumn() + (pawnProfile.get(move)[0] * direction);
             int row = myPosition.getRow() + (pawnProfile.get(move)[1] * direction);
-            if (isOnBoard(row, col)) {
+            if (ChessBoard.isOnBoard(row, col)) {
                 movesOnMap.add(move);
             }
         }
