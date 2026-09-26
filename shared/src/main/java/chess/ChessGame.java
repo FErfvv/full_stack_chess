@@ -70,6 +70,7 @@ public class ChessGame {
         Collection<ChessMove> possibleMoves = pieceToMove.pieceMoves(board,move.getStartPosition());
         if (possibleMoves.contains(move)) {
             board.movePiece(move);
+            teamTurn = (teamTurn == TeamColor.BLACK) ? TeamColor.WHITE : TeamColor.BLACK;
         } else {
             throw new InvalidMoveException();
         }
