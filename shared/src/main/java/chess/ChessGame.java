@@ -64,7 +64,7 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
-        if (pieceToMove.getTeamColor() != teamTurn) {
+        if (pieceToMove == null || pieceToMove.getTeamColor() != teamTurn) {
             throw new InvalidMoveException();
         }
         Collection<ChessMove> possibleMoves = pieceToMove.pieceMoves(board,move.getStartPosition());
