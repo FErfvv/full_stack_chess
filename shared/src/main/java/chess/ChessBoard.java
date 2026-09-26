@@ -43,12 +43,11 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        if (position.getColumn()-1 >= 0 && position.getColumn()-1 <= BOARD_WIDTH - 1
-            && position.getRow()-1 >= 0 && position.getRow()-1 <= BOARD_HEIGHT - 1) {
-            if (myBoard[position.getRow()-1][position.getColumn()-1] == null){
-                myBoard[position.getRow()-1][position.getColumn()-1] = piece;
-            }
-        }
+        myBoard[position.getRow()-1][position.getColumn()-1] = piece;
+    }
+
+    public void movePiece(ChessMove move) {
+
     }
 
     /**
@@ -131,5 +130,9 @@ public class ChessBoard {
 
     public ChessPiece[][] getMyBoard() {
         return myBoard;
+    }
+
+    public static boolean isOnBoard(int row, int col) {
+        return (row > 0 && row < ChessBoard.BOARD_HEIGHT + 1 && col > 0 && col < ChessBoard.BOARD_WIDTH + 1);
     }
 }
