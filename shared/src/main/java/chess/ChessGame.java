@@ -1,5 +1,7 @@
 package chess;
 
+import java.text.CollationElementIterator;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -93,7 +95,36 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
+        ChessPosition kingPos = findKingPosition(teamColor);
+
+        Collection<ChessMove> kingMoves = board.getPiece(kingPos).pieceMoves(board,kingPos);
+        Collection<ChessPosition> kingPossiblePositions = new ArrayList<>();
+        for (ChessMove move: kingMoves) {
+            kingPossiblePositions.add(move.getEndPosition());
+        }
+        return false;
+    }
+
+    private ChessPosition findKingPosition(TeamColor teamColor) {
+        ChessPosition kingPos = null;
+        for (int row = 1; row <= ChessBoard.BOARD_HEIGHT; row++) {
+            for (int col = 1; col <= ChessBoard.BOARD_WIDTH; col++) {
+                ChessPiece currentPiece = board.getPiece(new ChessPosition(row,col));
+                if (currentPiece == null) {
+                    continue;
+                }
+                if (currentPiece.getPieceType() == ChessPiece.PieceType.KING
+                        && currentPiece.getTeamColor() == teamColor) {
+                    kingPos = new ChessPosition(row,col);
+                }
+            }
+        }
+        if (kingPos == null || board.getPiece(kingPos) == null) {
+            throw new NullPointerException("No King was found on the board");
+        }
+
+        return kingPos;
     }
 
     /**
