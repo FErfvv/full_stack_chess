@@ -1,9 +1,7 @@
 package chess;
 
-import java.text.CollationElementIterator;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -97,13 +95,30 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
 
         ChessPosition kingPos = findKingPosition(teamColor);
-
-        Collection<ChessMove> kingMoves = board.getPiece(kingPos).pieceMoves(board,kingPos);
-        Collection<ChessPosition> kingPossiblePositions = new ArrayList<>();
-        for (ChessMove move: kingMoves) {
-            kingPossiblePositions.add(move.getEndPosition());
-        }
+        Collection<ChessPosition> kingFuturePos = getAllEndPositions(kingPos);
+        getAttackingPieces(teamColor,kingFuturePos);
         return false;
+    }
+
+    private Collection<ChessPosition> getAttackingPieces(TeamColor teamColor, Collection<ChessPosition> kingFuturePo) {
+
+        for (int row = 1; row <= ChessBoard.BOARD_HEIGHT; row++) {
+            for (int col = 1; col <= ChessBoard.BOARD_WIDTH; col++) {
+                ChessPosition currentPos = new ChessPosition(row, col);
+                ChessPiece currentPiece = board.getPiece(currentPos);
+                if (currentPiece == null || currentPiece.getTeamColor() == teamColor ) {
+                    continue;
+                }
+
+                Collection<ChessPosition> attackingEndPositions = getAllEndPositions(currentPos);
+                for (ChessPosition position : attackingEndPositions) {
+                    if (kingFuturePo.contains(position)) {
+                        System.out.print("This position matches:" + position);
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private ChessPosition findKingPosition(TeamColor teamColor) {
@@ -117,14 +132,25 @@ public class ChessGame {
                 if (currentPiece.getPieceType() == ChessPiece.PieceType.KING
                         && currentPiece.getTeamColor() == teamColor) {
                     kingPos = new ChessPosition(row,col);
+
                 }
             }
         }
         if (kingPos == null || board.getPiece(kingPos) == null) {
             throw new NullPointerException("No King was found on the board");
         }
-
+        System.out.println(kingPos);
         return kingPos;
+    }
+
+    private Collection<ChessPosition> getAllEndPositions(ChessPosition kingPos) {
+        Collection<ChessMove> kingMoves = board.getPiece(kingPos).pieceMoves(board,kingPos);
+        Collection<ChessPosition> kingPossiblePositions = new ArrayList<>();
+        for (ChessMove move: kingMoves) {
+            System.out.println(board.getPiece(kingPos).getPieceType() + "moves: " + move);
+            kingPossiblePositions.add(move.getEndPosition());
+        }
+        return kingPossiblePositions;
     }
 
     /**
