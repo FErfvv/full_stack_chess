@@ -25,7 +25,6 @@ public class PieceProfileTemplate {
         int deltaCol = direction[0];
         int deltaRow = direction[1];
 
-        System.out.println("(COL: " + deltaCol + ", ROW: " + deltaRow + ")");
         int col = myPosition.getColumn() + deltaCol;
         int row = myPosition.getRow() + deltaRow;
 
