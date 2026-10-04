@@ -92,6 +92,27 @@ public class ChessBoard {
             for (int col = 0; col < BOARD_WIDTH; col++) {
                 if (myBoard[row][col] == null) {
                     boardString += " |";
+                } else if (myBoard[row][col].getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    switch (myBoard[row][col].getPieceType()) {
+                        case PAWN:
+                            boardString += "P|";
+                            break;
+                        case ROOK:
+                            boardString += "R|";
+                            break;
+                        case KNIGHT:
+                            boardString += "N|";
+                            break;
+                        case BISHOP:
+                            boardString += "B|";
+                            break;
+                        case KING:
+                            boardString += "K|";
+                            break;
+                        case QUEEN:
+                            boardString += "Q|";
+                            break;
+                    }
                 } else {
                     switch (myBoard[row][col].getPieceType()) {
                         case PAWN:
