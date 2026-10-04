@@ -94,13 +94,25 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
 
-        ChessPosition kingPos = findKingPosition(teamColor);
-        Collection<ChessPosition> kingFuturePos = getAllEndPositions(kingPos);
-        getAttackingPieces(teamColor,kingFuturePos);
+        CheckInfoTracker tracker = setupCheckmateInfoTracker(teamColor);
+        for (ChessPosition pos : tracker.getAttackedPositions() ) {
+            System.out.println("Attacked Here: " + pos);
+        }
+        for (ChessPosition pos : tracker.getAttackingPieces() ) {
+            System.out.println("Attacked By: " + pos);
+        }
+
         return false;
     }
 
-    private Collection<ChessPosition> getAttackingPieces(TeamColor teamColor, Collection<ChessPosition> kingFuturePo) {
+    public CheckInfoTracker setupCheckmateInfoTracker(TeamColor teamColor) {
+        ChessPosition kingPos = findKingPosition(teamColor);
+        CheckInfoTracker infoTracker = new CheckInfoTracker();
+        infoTracker.setKingFuturePos(getAllEndPositions(kingPos));
+        return getAttackingPieces(teamColor,infoTracker, kingPos);
+    }
+
+    private CheckInfoTracker getAttackingPieces(TeamColor teamColor, CheckInfoTracker infoTracker, ChessPosition kingPos) {
 
         for (int row = 1; row <= ChessBoard.BOARD_HEIGHT; row++) {
             for (int col = 1; col <= ChessBoard.BOARD_WIDTH; col++) {
@@ -112,13 +124,23 @@ public class ChessGame {
 
                 Collection<ChessPosition> attackingEndPositions = getAllEndPositions(currentPos);
                 for (ChessPosition position : attackingEndPositions) {
-                    if (kingFuturePo.contains(position)) {
-                        System.out.print("This position matches:" + position);
+                    if (infoTracker.getKingFuturePos().contains(position)) {
+                        if (!infoTracker.getAttackingPieces().contains(currentPos)) {
+                            infoTracker.addAttackingPiece(currentPos);
+                        }
+                        infoTracker.addAttackedPos(position);
+                    } else if (position.equals(kingPos)) {
+                        infoTracker.addAttackedPos(kingPos);
+                        infoTracker.setKingIsAttacked(true);
+                        if (!infoTracker.getAttackingPieces().contains(currentPos)) {
+                            infoTracker.addAttackingPiece(currentPos);
+                        }
                     }
                 }
             }
         }
-        return null;
+
+        return infoTracker;
     }
 
     private ChessPosition findKingPosition(TeamColor teamColor) {
@@ -139,7 +161,6 @@ public class ChessGame {
         if (kingPos == null || board.getPiece(kingPos) == null) {
             throw new NullPointerException("No King was found on the board");
         }
-        System.out.println(kingPos);
         return kingPos;
     }
 
@@ -147,7 +168,6 @@ public class ChessGame {
         Collection<ChessMove> kingMoves = board.getPiece(kingPos).pieceMoves(board,kingPos);
         Collection<ChessPosition> kingPossiblePositions = new ArrayList<>();
         for (ChessMove move: kingMoves) {
-            System.out.println(board.getPiece(kingPos).getPieceType() + "moves: " + move);
             kingPossiblePositions.add(move.getEndPosition());
         }
         return kingPossiblePositions;
