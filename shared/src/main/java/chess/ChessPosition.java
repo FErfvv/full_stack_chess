@@ -14,8 +14,13 @@ public class ChessPosition {
     private final int col;
 
     public ChessPosition(int row, int col) {
-        this.row = row;
-        this.col = col;
+        if (ChessBoard.isOnBoard(row,col)) {
+            this.row = row;
+            this.col = col;
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
+
     }
 
     /**
