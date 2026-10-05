@@ -1,5 +1,7 @@
 package chess;
 
+import chess.PieceProfiles.PawnMoveProfile;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -111,7 +113,7 @@ public class ChessGame {
     public CheckInfoTracker setupCheckmateInfoTracker(TeamColor teamColor) {
         ChessPosition kingPos = findKingPosition(teamColor);
         CheckInfoTracker infoTracker = new CheckInfoTracker();
-        infoTracker.setKingFuturePos(getAllEndPositions(kingPos));
+        infoTracker.setKingFuturePos(getAllEndPositions(kingPos, infoTracker));
         return getAttackingPieces(teamColor,infoTracker, kingPos);
     }
 
@@ -119,12 +121,14 @@ public class ChessGame {
 
         for (int row = 1; row <= ChessBoard.BOARD_HEIGHT; row++) {
             for (int col = 1; col <= ChessBoard.BOARD_WIDTH; col++) {
+                // Iterates through the board and finds pieces from the opposing team
                 ChessPosition currentPos = new ChessPosition(row, col);
                 ChessPiece currentPiece = board.getPiece(currentPos);
                 if (currentPiece == null || currentPiece.getTeamColor() == teamColor ) {
                     continue;
                 }
-                Collection<ChessPosition> attackingEndPositions = getAllEndPositions(currentPos);
+                // Gets all the possible movements from that piece
+                Collection<ChessPosition> attackingEndPositions = getAllEndPositions(currentPos, infoTracker);
                 for (ChessPosition position : attackingEndPositions) {
                     // Checks to see if the spaces around the king are being attacked
                     if (infoTracker.getKingFuturePos().contains(position)) {
@@ -173,13 +177,21 @@ public class ChessGame {
         return kingPos;
     }
 
-    private Collection<ChessPosition> getAllEndPositions(ChessPosition kingPos) {
-        Collection<ChessMove> kingMoves = board.getPiece(kingPos).pieceMoves(board,kingPos);
-        Collection<ChessPosition> kingPossiblePositions = new ArrayList<>();
-        for (ChessMove move: kingMoves) {
-            kingPossiblePositions.add(move.getEndPosition());
+    private Collection<ChessPosition> getAllEndPositions(ChessPosition piecePosition, CheckInfoTracker infoTracker) {
+
+        Collection<ChessMove> moves;
+        // If the piece is a pawn, use a separate method in the profile class to see if it is attacking.
+        if (board.getPiece(piecePosition).getPieceType() == ChessPiece.PieceType.PAWN) {
+            moves = new PawnMoveProfile().checkIfAttackingKing(board, piecePosition,infoTracker);
+        } else {
+            moves = board.getPiece(piecePosition).pieceMoves(board,piecePosition);
         }
-        return kingPossiblePositions;
+
+        Collection<ChessPosition> possiblePositions = new ArrayList<>();
+        for (ChessMove move: moves) {
+            possiblePositions.add(move.getEndPosition());
+        }
+        return possiblePositions;
     }
 
     /**

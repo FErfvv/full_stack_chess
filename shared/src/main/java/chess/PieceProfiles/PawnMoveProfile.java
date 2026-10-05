@@ -3,6 +3,7 @@ package chess.PieceProfiles;
 import chess.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -75,5 +76,40 @@ public class PawnMoveProfile extends PieceProfileTemplate {
                 myMoves.add(new ChessMove(myPosition,targetPosition,type));
             }
         }
+    }
+
+    public Collection<ChessMove> checkIfAttackingKing(ChessBoard board, ChessPosition myPosition, CheckInfoTracker infoTracker) {
+        List<ChessMove> myMoves = new ArrayList<>();
+
+        String[] allMoves = {"left", "right"};
+        int direction = 1;
+        if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+            direction = -1;
+        }
+        Map<String, int[]> pawnProfile = Map.ofEntries(
+                Map.entry("left",super.MOVEMENT_PROFILE[0]),
+                Map.entry("right",super.MOVEMENT_PROFILE[1])
+        );
+        List<String> movesOnMap = new ArrayList<>();
+        for (String move: allMoves) {
+            int col = myPosition.getColumn() + (pawnProfile.get(move)[0] * direction);
+            int row = myPosition.getRow() + (pawnProfile.get(move)[1] * direction);
+            if (ChessBoard.isOnBoard(row, col)) {
+                movesOnMap.add(move);
+            }
+        }
+        for (String move: movesOnMap) {
+            int col = myPosition.getColumn() + (pawnProfile.get(move)[0] * direction);
+            int row = myPosition.getRow() + (pawnProfile.get(move)[1] * direction);
+            ChessPosition targetPos = new ChessPosition(row, col);
+
+            if (board.getPiece(targetPos) != null && board.getPiece(targetPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
+                myMoves.add(new ChessMove(myPosition, targetPos, null));
+            } else if (board.getPiece(targetPos) == null && infoTracker.getKingFuturePos().contains(targetPos)) {
+                myMoves.add(new ChessMove(myPosition, targetPos, null));
+            }
+            break;
+        }
+        return myMoves;
     }
 }
