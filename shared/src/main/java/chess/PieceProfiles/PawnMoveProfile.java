@@ -77,8 +77,8 @@ public class PawnMoveProfile extends PieceProfileTemplate {
             }
         }
     }
-
-    public Collection<ChessMove> checkIfAttackingKing(ChessBoard board, ChessPosition myPosition, CheckInfoTracker infoTracker) {
+    @Override
+    public List<ChessMove> checkIfAttackingKing(ChessBoard board, ChessPosition myPosition, CheckInfoTracker infoTracker) {
         List<ChessMove> myMoves = new ArrayList<>();
 
         String[] allMoves = {"left", "right"};
@@ -108,7 +108,7 @@ public class PawnMoveProfile extends PieceProfileTemplate {
             } else if (board.getPiece(targetPos) == null && infoTracker.getKingFuturePos().contains(targetPos)) {
                 myMoves.add(new ChessMove(myPosition, targetPos, null));
             }
-            break;
+
         }
         return myMoves;
     }

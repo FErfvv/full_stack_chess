@@ -85,7 +85,8 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        CheckInfoTracker tracker = setupCheckmateInfoTracker(teamColor);
+        return tracker.isKingIsAttacked() && tracker.getAttackedPositions().size() < tracker.getKingFuturePos().size() + 1;
     }
 
     /**
