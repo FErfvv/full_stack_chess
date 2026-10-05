@@ -1,10 +1,15 @@
 package chess.PieceProfiles;
 
+import chess.CheckInfoTracker;
 import chess.ChessBoard;
 import chess.ChessMove;
 import chess.ChessPosition;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import static chess.ChessBoard.isOnBoard;
 
 public class PieceProfileTemplate {
     public boolean IS_CONTINUOUS;
@@ -27,20 +32,31 @@ public class PieceProfileTemplate {
 
         int col = myPosition.getColumn() + deltaCol;
         int row = myPosition.getRow() + deltaRow;
-
-        while (ChessBoard.isOnBoard(row,col)
-                && (board.getMyBoard()[row-1][col-1] == null
-                || board.getMyBoard()[row-1][col-1].getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
-
-            myMoves.add(new ChessMove(myPosition,new ChessPosition(row,col), null));
-            if (!IS_CONTINUOUS){
+        ChessPosition targetPos;
+        while (isOnBoard(row, col)) {
+            targetPos = new ChessPosition(row, col);
+            if (board.getPiece(targetPos) == null) {
+                myMoves.add(new ChessMove(myPosition,targetPos,null));
+            } else if (board.getPiece(targetPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()){
+                myMoves.add(new ChessMove(myPosition,targetPos,null));
+                break;
+            } else {
                 break;
             }
-            if (board.getMyBoard()[row-1][col-1] != null) {
+
+            if (!IS_CONTINUOUS) {
                 break;
             }
             col += deltaCol;
             row += deltaRow;
         }
+    }
+
+    public List<ChessMove> checkIfAttackingKing(ChessBoard board, ChessPosition myPosition, CheckInfoTracker infoTracker) {
+        List<ChessMove> myMoves = new ArrayList<>();
+        for (int[] direction: MOVEMENT_PROFILE) {
+            move(direction,board, myPosition,myMoves);
+        }
+        return myMoves;
     }
 }
