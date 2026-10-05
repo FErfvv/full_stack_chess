@@ -95,6 +95,9 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
 
         CheckInfoTracker tracker = setupCheckmateInfoTracker(teamColor);
+        if (tracker.isKingIsAttacked() && tracker.getAttackedPositions().size() == tracker.getKingFuturePos().size() + 1) {
+            return true;
+        }
         for (ChessPosition pos : tracker.getAttackedPositions() ) {
             System.out.println("Attacked Here: " + pos);
         }
@@ -121,16 +124,22 @@ public class ChessGame {
                 if (currentPiece == null || currentPiece.getTeamColor() == teamColor ) {
                     continue;
                 }
-
                 Collection<ChessPosition> attackingEndPositions = getAllEndPositions(currentPos);
                 for (ChessPosition position : attackingEndPositions) {
+                    // Checks to see if the spaces around the king are being attacked
                     if (infoTracker.getKingFuturePos().contains(position)) {
+                        // Logic to prevent the positions and pieces from being added twice
                         if (!infoTracker.getAttackingPieces().contains(currentPos)) {
                             infoTracker.addAttackingPiece(currentPos);
                         }
-                        infoTracker.addAttackedPos(position);
+                        if (!infoTracker.getAttackedPositions().contains(position)) {
+                            infoTracker.addAttackedPos(position);
+                        }
+                    // checks to see if the king is being attacked.
                     } else if (position.equals(kingPos)) {
-                        infoTracker.addAttackedPos(kingPos);
+                        if (!infoTracker.getAttackedPositions().contains(position)) {
+                            infoTracker.addAttackedPos(position);
+                        }
                         infoTracker.setKingIsAttacked(true);
                         if (!infoTracker.getAttackingPieces().contains(currentPos)) {
                             infoTracker.addAttackingPiece(currentPos);
