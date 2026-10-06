@@ -99,8 +99,13 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
 
         CheckInfoTracker tracker = setupCheckmateInfoTracker(teamColor);
-        if (tracker.isKingIsAttacked() && tracker.getAttackedPositions().size() == tracker.getKingFuturePos().size() + 1) {
+        if (tracker.isKingIsAttacked()
+                && tracker.getAttackedPositions().size() == tracker.getKingFuturePos().size() + 1
+                && tracker.getPosOfPiecesAttackingKing().size() > 1) {
             return true;
+        } else if (tracker.getPosOfPiecesAttackingKing().size() == 1) {
+            // If the piece that is attacking can be attacked, return false, else return true.
+            return (!canBeAttacked(teamColor,tracker.getPosOfPiecesAttackingKing().getFirst()));
         }
         for (ChessPosition pos : tracker.getAttackedPositions() ) {
             System.out.println("Attacked Here: " + pos);
@@ -110,6 +115,18 @@ public class ChessGame {
         }
 
         return false;
+    }
+
+    /**
+     * Determines if the given team is in stalemate, which here is defined as having
+     * no valid moves while not in check.
+     *
+     * @param teamColor which team to check for stalemate
+     * @return True if the specified team is in stalemate, otherwise false
+     */
+    public boolean isInStalemate(TeamColor teamColor) {
+        CheckInfoTracker tracker = setupCheckmateInfoTracker(teamColor);
+        return !tracker.isKingIsAttacked() && tracker.getAttackedPositions().size() == tracker.getKingFuturePos().size() && !tracker.getAttackedPositions().isEmpty();
     }
 
     public CheckInfoTracker setupCheckmateInfoTracker(TeamColor teamColor) {
@@ -131,22 +148,24 @@ public class ChessGame {
                 }
                 // Gets all the possible movements from that piece
                 Collection<ChessPosition> attackingEndPositions = getAllEndPositions(currentPos, infoTracker);
-                for (ChessPosition position : attackingEndPositions) {
+                for (ChessPosition attackedPosition : attackingEndPositions) {
                     // Checks to see if the spaces around the king are being attacked
-                    if (infoTracker.getKingFuturePos().contains(position)) {
+                    if (infoTracker.getKingFuturePos().contains(attackedPosition)) {
                         // Logic to prevent the positions and pieces from being added twice
                         if (!infoTracker.getAttackingPieces().contains(currentPos)) {
                             infoTracker.addAttackingPiece(currentPos);
                         }
-                        if (!infoTracker.getAttackedPositions().contains(position)) {
-                            infoTracker.addAttackedPos(position);
+                        if (!infoTracker.getAttackedPositions().contains(attackedPosition)) {
+                            infoTracker.addAttackedPos(attackedPosition);
                         }
                     // checks to see if the king is being attacked.
-                    } else if (position.equals(kingPos)) {
-                        if (!infoTracker.getAttackedPositions().contains(position)) {
-                            infoTracker.addAttackedPos(position);
+                    } else if (attackedPosition.equals(kingPos)) {
+                        if (!infoTracker.getAttackedPositions().contains(attackedPosition)) {
+                            infoTracker.addAttackedPos(attackedPosition);
                         }
                         infoTracker.setKingIsAttacked(true);
+                        // if there is a piece that is attacking the king, it saves that position to a list
+                        infoTracker.addToListOfPosAttackingKing(currentPos);
                         if (!infoTracker.getAttackingPieces().contains(currentPos)) {
                             infoTracker.addAttackingPiece(currentPos);
                         }
@@ -156,6 +175,27 @@ public class ChessGame {
         }
 
         return infoTracker;
+    }
+
+    private boolean canBeAttacked(TeamColor teamColor, ChessPosition piecePos) {
+        for (int row = 1; row <= ChessBoard.BOARD_HEIGHT; row++) {
+            for (int col = 1; col <= ChessBoard.BOARD_WIDTH; col++) {
+                // Iterates through the board and finds pieces from the opposing team
+                ChessPosition currentPos = new ChessPosition(row, col);
+                ChessPiece currentPiece = board.getPiece(currentPos);
+                if (currentPiece == null || currentPiece.getTeamColor() != teamColor) {
+                    continue;
+                }
+                // Gets all the possible movements from that piece
+                Collection<ChessMove> moves = board.getPiece(piecePos).pieceMoves(board,currentPos);
+                for (ChessMove move: moves) {
+                    if (move.getEndPosition().equals(piecePos)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private ChessPosition findKingPosition(TeamColor teamColor) {
@@ -181,26 +221,13 @@ public class ChessGame {
 
     private Collection<ChessPosition> getAllEndPositions(ChessPosition piecePosition, CheckInfoTracker infoTracker) {
 
-        Collection<ChessMove> moves;
-        // If the piece is a pawn, use a separate method in the profile class to see if it is attacking.
-        moves = board.getPiece(piecePosition).checkIfAttackingKing(board,piecePosition,infoTracker);
+        Collection<ChessMove> moves = board.getPiece(piecePosition).checkIfAttackingKing(board,piecePosition,infoTracker);
 
         Collection<ChessPosition> possiblePositions = new ArrayList<>();
         for (ChessMove move: moves) {
             possiblePositions.add(move.getEndPosition());
         }
         return possiblePositions;
-    }
-
-    /**
-     * Determines if the given team is in stalemate, which here is defined as having
-     * no valid moves while not in check.
-     *
-     * @param teamColor which team to check for stalemate
-     * @return True if the specified team is in stalemate, otherwise false
-     */
-    public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
     }
 
     /**

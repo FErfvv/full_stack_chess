@@ -2,12 +2,22 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class CheckInfoTracker {
     private Collection<ChessPosition> attackedPositions;
     private Collection<ChessPosition> kingFuturePos;
     private Collection<ChessPosition> attackingPieces;
     private boolean kingIsAttacked = false;
+    private List<ChessPosition> posOfPiecesAttackingKing;
+
+    public CheckInfoTracker() {
+        this.attackedPositions = new ArrayList<>();
+        this.attackingPieces = new ArrayList<>();
+        this.kingFuturePos = new ArrayList<>();
+        this.posOfPiecesAttackingKing = new ArrayList<>();
+    }
+
 
     public void setKingIsAttacked(boolean kingIsAttacked) {
         this.kingIsAttacked = kingIsAttacked;
@@ -21,14 +31,16 @@ public class CheckInfoTracker {
         return kingFuturePos;
     }
 
+    public List<ChessPosition> getPosOfPiecesAttackingKing() {
+        return posOfPiecesAttackingKing;
+    }
+
     public boolean isKingIsAttacked() {
         return kingIsAttacked;
     }
 
-    public CheckInfoTracker() {
-        this.attackedPositions = new ArrayList<>();
-        this.attackingPieces = new ArrayList<>();
-        this.kingFuturePos = new ArrayList<>();
+    public void addToListOfPosAttackingKing(ChessPosition posOfPieceAttackingKing) {
+        posOfPiecesAttackingKing.add(posOfPieceAttackingKing);
     }
 
     public void addAttackingPiece(ChessPosition attackPiecePos) {
