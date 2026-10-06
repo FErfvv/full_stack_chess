@@ -238,7 +238,6 @@ public class ChessGame {
                 // Iterates through the board and finds pieces from the opposing team
                 ChessPosition currentPos = new ChessPosition(row, col);
                 ChessPiece currentPiece = board.getPiece(currentPos);
-                // TODO: need to create more tests to see if there are situations where king does need to be checked
                 if (currentPiece == null || currentPiece.getTeamColor() != teamColor || currentPiece.getPieceType() == ChessPiece.PieceType.KING) {
                     continue;
                 }
