@@ -4,6 +4,7 @@ import chess.PieceProfiles.PawnMoveProfile;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -38,6 +39,20 @@ public class ChessGame {
      */
     public void setTeamTurn(TeamColor team) {
         teamTurn = team;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return Objects.equals(board, chessGame.board) && teamTurn == chessGame.teamTurn && Objects.equals(tracker, chessGame.tracker);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board, teamTurn, tracker);
     }
 
     /**
@@ -116,9 +131,6 @@ public class ChessGame {
         }
     }
 
-    public void undoMove(ChessMove move, ChessPiece startingPiece, ChessPiece endingPiece) {
-        board.movePiece(new ChessMove(move.getEndPosition(),move.getStartPosition(), startingPiece.getPieceType()));
-    }
 
     /**
      * Determines if the given team is in check
@@ -128,7 +140,7 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         tracker = setupCheckmateInfoTracker(teamColor);
-        return tracker.isKingIsAttacked() && tracker.getAttackedPositions().size() < tracker.getKingFuturePos().size() + 1;
+        return tracker.isKingIsAttacked() && tracker.getAttackedPositions().size() <= tracker.getKingFuturePos().size() + 1;
     }
 
     /**
