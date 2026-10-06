@@ -101,7 +101,6 @@ public class PawnMoveProfile extends PieceProfileTemplate {
             int col = myPosition.getColumn() + (pawnProfile.get(move)[0] * direction);
             int row = myPosition.getRow() + (pawnProfile.get(move)[1] * direction);
             ChessPosition targetPos = new ChessPosition(row, col);
-
             if (board.getPiece(targetPos) != null && board.getPiece(targetPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
                 myMoves.add(new ChessMove(myPosition, targetPos, null));
             } else if (infoTracker.getKingFuturePos().contains(targetPos)) {

@@ -14,6 +14,10 @@ import java.util.Collection;
 public class ChessGame {
     ChessBoard board;
     TeamColor teamTurn;
+
+    CheckInfoTracker tracker;
+
+
     public ChessGame() {
         board = new ChessBoard();
         board.resetBoard();
@@ -89,15 +93,19 @@ public class ChessGame {
         if (pieceToMove == null || teamTurn != pieceToMove.getTeamColor()) {
             return false;
         }
+        System.out.println("currently moving: " + pieceToMove.getPieceType());
+        System.out.println(board);
         Collection<ChessMove> possibleMoves = pieceToMove.pieceMoves(board,move.getStartPosition());
         if (possibleMoves.contains(move)) {
-
+            ChessPiece targetPiece = board.getPiece(move.getEndPosition());
             board.movePiece(move);
             if (isInCheck(teamTurn) || isInCheckmate(teamTurn)) {
                 board.movePiece(new ChessMove(move.getEndPosition(),move.getStartPosition(),pieceToMove.getPieceType()));
+                board.addPiece(move.getEndPosition(),targetPiece);
                 return false;
             } else {
                 board.movePiece(new ChessMove(move.getEndPosition(),move.getStartPosition(),pieceToMove.getPieceType()));
+                board.addPiece(move.getEndPosition(),targetPiece);
                 return true;
             }
         } else {
@@ -105,7 +113,7 @@ public class ChessGame {
         }
     }
 
-    public void undoMove(ChessMove move, ChessPiece startingPiece) {
+    public void undoMove(ChessMove move, ChessPiece startingPiece, ChessPiece endingPiece) {
         board.movePiece(new ChessMove(move.getEndPosition(),move.getStartPosition(), startingPiece.getPieceType()));
     }
 
@@ -116,7 +124,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        CheckInfoTracker tracker = setupCheckmateInfoTracker(teamColor);
+        tracker = setupCheckmateInfoTracker(teamColor);
         return tracker.isKingIsAttacked() && tracker.getAttackedPositions().size() < tracker.getKingFuturePos().size() + 1;
     }
 
@@ -128,7 +136,7 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
 
-        CheckInfoTracker tracker = setupCheckmateInfoTracker(teamColor);
+        tracker = setupCheckmateInfoTracker(teamColor);
         /**
          * If the king is being attacked, and it can't move to safe space, and it's being attacked
          * by multiple pieces, it's an automatic checkmate
@@ -153,7 +161,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        CheckInfoTracker tracker = setupCheckmateInfoTracker(teamColor);
+        tracker = setupCheckmateInfoTracker(teamColor);
         return !tracker.isKingIsAttacked() && tracker.getAttackedPositions().size() == tracker.getKingFuturePos().size() && !tracker.getAttackedPositions().isEmpty();
     }
 
