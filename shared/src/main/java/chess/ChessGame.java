@@ -206,7 +206,12 @@ public class ChessGame {
         return infoTracker;
     }
 
-    private void updateInfoTracker(Collection<ChessPosition> attackingEndPositions, CheckInfoTracker infoTracker, ChessPosition currentPos, ChessPosition kingPos) {
+    private void updateInfoTracker(
+            Collection<ChessPosition> attackingEndPositions,
+            CheckInfoTracker infoTracker,
+            ChessPosition currentPos,
+            ChessPosition kingPos) {
+
         for (ChessPosition attackedPosition : attackingEndPositions) {
             // Checks to see if the spaces around the king are being attacked
             if (infoTracker.getKingFuturePos().contains(attackedPosition)) {
