@@ -1,7 +1,5 @@
 package chess;
 
-import chess.PieceProfiles.PawnMoveProfile;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -177,7 +175,9 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         tracker = setupCheckmateInfoTracker(teamColor);
-        return !tracker.isKingIsAttacked() && tracker.getAttackedPositions().size() == tracker.getKingFuturePos().size() && !tracker.getAttackedPositions().isEmpty();
+        return !tracker.isKingIsAttacked()
+                && tracker.getAttackedPositions().size() == tracker.getKingFuturePos().size()
+                && !tracker.getAttackedPositions().isEmpty();
     }
 
     public CheckInfoTracker setupCheckmateInfoTracker(TeamColor teamColor) {
@@ -199,33 +199,37 @@ public class ChessGame {
                 }
                 // Gets all the possible movements from that piece
                 Collection<ChessPosition> attackingEndPositions = getAllEndPositions(currentPos, infoTracker);
-                for (ChessPosition attackedPosition : attackingEndPositions) {
-                    // Checks to see if the spaces around the king are being attacked
-                    if (infoTracker.getKingFuturePos().contains(attackedPosition)) {
-                        // Logic to prevent the positions and pieces from being added twice
-                        if (!infoTracker.getAttackingPieces().contains(currentPos)) {
-                            infoTracker.addAttackingPiece(currentPos);
-                        }
-                        if (!infoTracker.getAttackedPositions().contains(attackedPosition)) {
-                            infoTracker.addAttackedPos(attackedPosition);
-                        }
-                    // checks to see if the king is being attacked.
-                    } else if (attackedPosition.equals(kingPos)) {
-                        if (!infoTracker.getAttackedPositions().contains(attackedPosition)) {
-                            infoTracker.addAttackedPos(attackedPosition);
-                        }
-                        infoTracker.setKingIsAttacked(true);
-                        // if there is a piece that is attacking the king, it saves that position to a list
-                        infoTracker.addToListOfPosAttackingKing(currentPos);
-                        if (!infoTracker.getAttackingPieces().contains(currentPos)) {
-                            infoTracker.addAttackingPiece(currentPos);
-                        }
-                    }
-                }
+                updateInfoTracker(attackingEndPositions, infoTracker, currentPos, kingPos);
             }
         }
 
         return infoTracker;
+    }
+
+    private void updateInfoTracker(Collection<ChessPosition> attackingEndPositions, CheckInfoTracker infoTracker, ChessPosition currentPos, ChessPosition kingPos) {
+        for (ChessPosition attackedPosition : attackingEndPositions) {
+            // Checks to see if the spaces around the king are being attacked
+            if (infoTracker.getKingFuturePos().contains(attackedPosition)) {
+                // Logic to prevent the positions and pieces from being added twice
+                if (!infoTracker.getAttackingPieces().contains(currentPos)) {
+                    infoTracker.addAttackingPiece(currentPos);
+                }
+                if (!infoTracker.getAttackedPositions().contains(attackedPosition)) {
+                    infoTracker.addAttackedPos(attackedPosition);
+                }
+                // checks to see if the king is being attacked.
+            } else if (attackedPosition.equals(kingPos)) {
+                if (!infoTracker.getAttackedPositions().contains(attackedPosition)) {
+                    infoTracker.addAttackedPos(attackedPosition);
+                }
+                infoTracker.setKingIsAttacked(true);
+                // if there is a piece that is attacking the king, it saves that position to a list
+                infoTracker.addToListOfPosAttackingKing(currentPos);
+                if (!infoTracker.getAttackingPieces().contains(currentPos)) {
+                    infoTracker.addAttackingPiece(currentPos);
+                }
+            }
+        }
     }
 
     private boolean canBeAttacked(TeamColor teamColor, ChessPosition piecePos) {

@@ -1,16 +1,24 @@
-package chess.PieceProfiles;
+package chess.pieceprofiles;
 
 import chess.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class PawnMoveProfile extends PieceProfileTemplate {
+
+    Map<String, int[]> pawnProfile = Map.ofEntries(
+            Map.entry("left", super.movementProfile[0]),
+            Map.entry("right", super.movementProfile[1]),
+            Map.entry("forward1", super.movementProfile[2]),
+            Map.entry("forward2", super.movementProfile[3])
+    );
+
     public PawnMoveProfile() {
         super(false, new int [][] {{-1,1}, {1,1}, {0, 1}, {0, 2}});
     }
+
 
     @Override
     public void checkMoves(ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves, CheckInfoTracker checkTracker) {
@@ -19,20 +27,9 @@ public class PawnMoveProfile extends PieceProfileTemplate {
         if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
             direction = -1;
         }
-        Map<String, int[]> pawnProfile = Map.ofEntries(
-                Map.entry("left",super.MOVEMENT_PROFILE[0]),
-                Map.entry("right",super.MOVEMENT_PROFILE[1]),
-                Map.entry("forward1",super.MOVEMENT_PROFILE[2]),
-                Map.entry("forward2",super.MOVEMENT_PROFILE[3])
-        );
-        List<String> movesOnMap = new ArrayList<>();
-        for (String move: allMoves) {
-            int col = myPosition.getColumn() + (pawnProfile.get(move)[0] * direction);
-            int row = myPosition.getRow() + (pawnProfile.get(move)[1] * direction);
-            if (ChessBoard.isOnBoard(row, col)) {
-                movesOnMap.add(move);
-            }
-        }
+
+        List<String> movesOnMap = checkIfMovesOnMap(board,myPosition,allMoves,direction);
+
         boolean canJump = false;
         for (String move: movesOnMap) {
             int col = myPosition.getColumn() + (pawnProfile.get(move)[0] * direction);
@@ -85,18 +82,8 @@ public class PawnMoveProfile extends PieceProfileTemplate {
         if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
             direction = -1;
         }
-        Map<String, int[]> pawnProfile = Map.ofEntries(
-                Map.entry("left",super.MOVEMENT_PROFILE[0]),
-                Map.entry("right",super.MOVEMENT_PROFILE[1])
-        );
-        List<String> movesOnMap = new ArrayList<>();
-        for (String move: allMoves) {
-            int col = myPosition.getColumn() + (pawnProfile.get(move)[0] * direction);
-            int row = myPosition.getRow() + (pawnProfile.get(move)[1] * direction);
-            if (ChessBoard.isOnBoard(row, col)) {
-                movesOnMap.add(move);
-            }
-        }
+
+        List<String> movesOnMap = checkIfMovesOnMap(board,myPosition,allMoves,direction);
         for (String move: movesOnMap) {
             int col = myPosition.getColumn() + (pawnProfile.get(move)[0] * direction);
             int row = myPosition.getRow() + (pawnProfile.get(move)[1] * direction);
@@ -107,5 +94,17 @@ public class PawnMoveProfile extends PieceProfileTemplate {
                 myMoves.add(new ChessMove(myPosition, targetPos, null));
             }
         }
+    }
+
+    private List<String> checkIfMovesOnMap(ChessBoard board, ChessPosition myPosition, String[] allMoves, int direction) {
+        List<String> movesOnMap = new ArrayList<>();
+        for (String move: allMoves) {
+            int col = myPosition.getColumn() + (pawnProfile.get(move)[0] * direction);
+            int row = myPosition.getRow() + (pawnProfile.get(move)[1] * direction);
+            if (ChessBoard.isOnBoard(row, col)) {
+                movesOnMap.add(move);
+            }
+        }
+        return movesOnMap;
     }
 }

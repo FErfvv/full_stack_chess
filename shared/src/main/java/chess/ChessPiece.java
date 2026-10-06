@@ -1,6 +1,6 @@
 package chess;
 
-import chess.PieceProfiles.*;
+import chess.pieceprofiles.*;
 
 import java.util.*;
 

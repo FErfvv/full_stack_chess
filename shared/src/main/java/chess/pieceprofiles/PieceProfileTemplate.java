@@ -1,27 +1,25 @@
-package chess.PieceProfiles;
+package chess.pieceprofiles;
 
 import chess.CheckInfoTracker;
 import chess.ChessBoard;
 import chess.ChessMove;
 import chess.ChessPosition;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static chess.ChessBoard.isOnBoard;
 
 public class PieceProfileTemplate {
-    public boolean IS_CONTINUOUS;
-    public int[][] MOVEMENT_PROFILE;
+    public boolean isContinuous;
+    public int[][] movementProfile;
 
     public PieceProfileTemplate(boolean cont, int[][] prof) {
-        IS_CONTINUOUS = cont;
-        MOVEMENT_PROFILE = prof;
+        isContinuous = cont;
+        movementProfile = prof;
     }
 
     public void checkMoves(ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves, CheckInfoTracker checkTracker) {
-        for (int[] direction: MOVEMENT_PROFILE) {
+        for (int[] direction: movementProfile) {
             move(direction,board, myPosition,myMoves, checkTracker);
         }
     }
@@ -47,7 +45,7 @@ public class PieceProfileTemplate {
                 break;
             }
 
-            if (!IS_CONTINUOUS) {
+            if (!isContinuous) {
                 break;
             }
             col += deltaCol;

@@ -1,4 +1,4 @@
-package chess.PieceProfiles;
+package chess.pieceprofiles;
 
 public class KingMoveProfile extends PieceProfileTemplate {
     public KingMoveProfile() {
