@@ -20,13 +20,13 @@ public class PieceProfileTemplate {
         MOVEMENT_PROFILE = prof;
     }
 
-    public void checkMoves(ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves) {
+    public void checkMoves(ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves, CheckInfoTracker checkTracker) {
         for (int[] direction: MOVEMENT_PROFILE) {
-            move(direction,board, myPosition,myMoves);
+            move(direction,board, myPosition,myMoves, checkTracker);
         }
     }
 
-    private void move(int[] direction, ChessBoard board, ChessPosition myPosition,List<ChessMove> myMoves) {
+    private void move(int[] direction, ChessBoard board, ChessPosition myPosition,List<ChessMove> myMoves, CheckInfoTracker checkTracker) {
         int deltaCol = direction[0];
         int deltaRow = direction[1];
 
@@ -40,6 +40,9 @@ public class PieceProfileTemplate {
             } else if (board.getPiece(targetPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()){
                 myMoves.add(new ChessMove(myPosition,targetPos,null));
                 break;
+            } else if (checkTracker != null && checkTracker.getKingFuturePos().contains(targetPos)) {
+                myMoves.add(new ChessMove(myPosition,targetPos,null));
+                break;
             } else {
                 break;
             }
@@ -50,13 +53,5 @@ public class PieceProfileTemplate {
             col += deltaCol;
             row += deltaRow;
         }
-    }
-
-    public List<ChessMove> checkIfAttackingKing(ChessBoard board, ChessPosition myPosition, CheckInfoTracker infoTracker) {
-        List<ChessMove> myMoves = new ArrayList<>();
-        for (int[] direction: MOVEMENT_PROFILE) {
-            move(direction,board, myPosition,myMoves);
-        }
-        return myMoves;
     }
 }

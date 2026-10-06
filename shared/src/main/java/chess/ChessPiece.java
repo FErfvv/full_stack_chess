@@ -88,7 +88,23 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece myPiece = board.getPiece(myPosition);
         List<ChessMove> myMoves = new ArrayList<>();
-        PIECE_PROFILES.get(myPiece.getPieceType()).checkMoves(board,myPosition,myMoves);
+        PIECE_PROFILES.get(myPiece.getPieceType()).checkMoves(board,myPosition,myMoves, null);
+        return myMoves;
+    }
+
+    /**
+     * Creates near duplicate of pieceMoves method to check for attacks on king.
+     * Necessary because the parameters of the other method cannot be changed to keep passing the tests.
+      */
+    public Collection<ChessMove> checkIfAttackingKing(ChessBoard board, ChessPosition myPosition, CheckInfoTracker checkTracker) {
+        ChessPiece myPiece = board.getPiece(myPosition);
+        List<ChessMove> myMoves = new ArrayList<>();
+        if (myPiece.getPieceType() == PieceType.PAWN) {
+            new PawnMoveProfile().checkIfAttackingKing(board,myPosition,myMoves, checkTracker);
+        } else {
+            PIECE_PROFILES.get(myPiece.getPieceType()).checkMoves(board,myPosition,myMoves, checkTracker);
+        }
+
         return myMoves;
     }
 }

@@ -13,7 +13,7 @@ public class PawnMoveProfile extends PieceProfileTemplate {
     }
 
     @Override
-    public void checkMoves(ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves) {
+    public void checkMoves(ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves, CheckInfoTracker checkTracker) {
         String[] allMoves = {"left", "right", "forward1","forward2"};
         int direction = 1;
         if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
@@ -77,9 +77,8 @@ public class PawnMoveProfile extends PieceProfileTemplate {
             }
         }
     }
-    @Override
-    public List<ChessMove> checkIfAttackingKing(ChessBoard board, ChessPosition myPosition, CheckInfoTracker infoTracker) {
-        List<ChessMove> myMoves = new ArrayList<>();
+
+    public void checkIfAttackingKing(ChessBoard board, ChessPosition myPosition, List<ChessMove> myMoves, CheckInfoTracker infoTracker) {
 
         String[] allMoves = {"left", "right"};
         int direction = 1;
@@ -105,11 +104,9 @@ public class PawnMoveProfile extends PieceProfileTemplate {
 
             if (board.getPiece(targetPos) != null && board.getPiece(targetPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
                 myMoves.add(new ChessMove(myPosition, targetPos, null));
-            } else if (board.getPiece(targetPos) == null && infoTracker.getKingFuturePos().contains(targetPos)) {
+            } else if (infoTracker.getKingFuturePos().contains(targetPos)) {
                 myMoves.add(new ChessMove(myPosition, targetPos, null));
             }
-
         }
-        return myMoves;
     }
 }

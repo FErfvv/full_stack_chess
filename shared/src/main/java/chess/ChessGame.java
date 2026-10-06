@@ -16,6 +16,7 @@ public class ChessGame {
     TeamColor teamTurn;
     public ChessGame() {
         board = new ChessBoard();
+        board.resetBoard();
         teamTurn = TeamColor.WHITE;
     }
 
@@ -182,11 +183,7 @@ public class ChessGame {
 
         Collection<ChessMove> moves;
         // If the piece is a pawn, use a separate method in the profile class to see if it is attacking.
-        if (board.getPiece(piecePosition).getPieceType() == ChessPiece.PieceType.PAWN) {
-            moves = new PawnMoveProfile().checkIfAttackingKing(board, piecePosition,infoTracker);
-        } else {
-            moves = board.getPiece(piecePosition).pieceMoves(board,piecePosition);
-        }
+        moves = board.getPiece(piecePosition).checkIfAttackingKing(board,piecePosition,infoTracker);
 
         Collection<ChessPosition> possiblePositions = new ArrayList<>();
         for (ChessMove move: moves) {
