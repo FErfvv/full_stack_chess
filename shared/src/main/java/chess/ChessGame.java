@@ -80,7 +80,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if (canMakeMove(move)) {
+        if (canMakeMove(move) && teamTurn == board.getPiece(move.getStartPosition()).getTeamColor()) {
             board.movePiece(move);
             teamTurn = (teamTurn == TeamColor.BLACK) ? TeamColor.WHITE : TeamColor.BLACK;
         } else {
@@ -90,16 +90,19 @@ public class ChessGame {
 
     public boolean canMakeMove(ChessMove move) {
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
-        if (pieceToMove == null || teamTurn != pieceToMove.getTeamColor()) {
+        if (pieceToMove == null) {
             return false;
         }
         System.out.println("currently moving: " + pieceToMove.getPieceType());
+        System.out.println("Original");
         System.out.println(board);
         Collection<ChessMove> possibleMoves = pieceToMove.pieceMoves(board,move.getStartPosition());
         if (possibleMoves.contains(move)) {
             ChessPiece targetPiece = board.getPiece(move.getEndPosition());
             board.movePiece(move);
-            if (isInCheck(teamTurn) || isInCheckmate(teamTurn)) {
+            System.out.println("currently moving: " + pieceToMove.getPieceType());
+            System.out.println(board);
+            if (isInCheck(pieceToMove.getTeamColor()) || isInCheckmate(pieceToMove.getTeamColor())) {
                 board.movePiece(new ChessMove(move.getEndPosition(),move.getStartPosition(),pieceToMove.getPieceType()));
                 board.addPiece(move.getEndPosition(),targetPiece);
                 return false;
