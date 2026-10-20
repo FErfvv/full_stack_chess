@@ -12,7 +12,7 @@ public interface DataAccess {
     public void clear();
 
     // Create a new user.
-    public UserData createUser();
+    public void createUser(UserData currentUser);
 
     // Retrieve a user with the given username.
     public UserData getUser(String username);
@@ -30,7 +30,7 @@ public interface DataAccess {
     public void updateGame(String id);
 
     // Create a new authorization.
-    public AuthToken createAuth();
+    public void createAuth(AuthToken authToken);
 
     // Retrieve an authorization given an authToken.
     public boolean getAuth(AuthToken authToken);

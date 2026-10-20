@@ -6,22 +6,25 @@ import model.UserData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MemoryDataAccess implements DataAccess {
-    private HashMap<String, UserData> users = new HashMap<>();
+    private final HashMap<String, UserData> users = new HashMap<>();
+    private final List<AuthToken> authDataHashMap = new ArrayList<>();
+    private final HashMap<String, GameData> gameList = new HashMap<>();
 
     public void clear() {
 
     }
 
     @Override
-    public UserData createUser() {
-        return null;
+    public void createUser(UserData currentUser) {
+        users.put(currentUser.username(), currentUser);
     }
 
     @Override
     public UserData getUser(String username) {
-        return null;
+        return users.get(username);
     }
 
     @Override
@@ -45,8 +48,8 @@ public class MemoryDataAccess implements DataAccess {
     }
 
     @Override
-    public AuthToken createAuth() {
-        return null;
+    public void createAuth(AuthToken authToken) {
+        authDataHashMap.add(authToken);
     }
 
     @Override

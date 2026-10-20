@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.*;
 import io.javalin.http.Context;
+import model.AuthToken;
 import model.UserData;
 import org.w3c.dom.UserDataHandler;
 
@@ -22,8 +23,8 @@ public class Server {
     }
 
     private static void register(Context ctx) {
-        UserData myData = ServerHandler.register(ctx.body());
-        
+        AuthToken myData = ServerHandler.register(ctx.body());
+
         var result = Map.of("username", "", "authToken", "");
         ctx.result(new Gson().toJson(result));
 
