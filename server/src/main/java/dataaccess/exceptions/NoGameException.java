@@ -1,4 +1,4 @@
-package dataaccess;
+package dataaccess.exceptions;
 
 /**
  * Indicates the game requested does not exist
