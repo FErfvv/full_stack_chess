@@ -3,6 +3,8 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.*;
 import io.javalin.http.Context;
+import model.UserData;
+import org.w3c.dom.UserDataHandler;
 
 import java.util.Map;
 
@@ -13,13 +15,15 @@ public class Server {
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
-        javalin.post("user", Server::register);
-        javalin.delete("/db", ctx->ctx.result("{}"));
+        javalin.post("/user", Server::register);
+        javalin.delete("/db", ctx -> ctx.result("{}"));
         // Register your endpoints and exception handlers here.
 
     }
 
     private static void register(Context ctx) {
+        UserData myData = ServerHandler.register(ctx.body());
+        
         var result = Map.of("username", "", "authToken", "");
         ctx.result(new Gson().toJson(result));
 
