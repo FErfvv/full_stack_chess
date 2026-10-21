@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.exceptions.UsernameAlreadyTakenException;
 import io.javalin.*;
 import io.javalin.http.Context;
 import model.AuthToken;
@@ -23,10 +24,22 @@ public class Server {
     }
 
     private static void register(Context ctx) {
-        AuthToken myData = ServerHandler.register(ctx.body());
-        var result = Map.of("username", "", "authToken", "");
-        ctx.result(new Gson().toJson(result));
+        AuthToken myData = null;
+        Map<String, String> result = null;
+        int status = 200;
+        try {
+            myData = ServerHandler.register(ctx.body());
+        } catch (UsernameAlreadyTakenException e) {
+            result = Map.of("message", "Error: username already taken");
+            status = 403;
+        }
 
+        if (myData != null) {
+            result = Map.of("username", myData.username(), "authToken", myData.authToken());
+        }
+        ctx.contentType("application/json");
+        ctx.result(new Gson().toJson(result));
+        ctx.status(status);
     }
 
     public int run(int desiredPort) {

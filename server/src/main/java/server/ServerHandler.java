@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.exceptions.UsernameAlreadyTakenException;
 import model.AuthToken;
 import model.UserData;
 import model.requests.RegisterRequest;
@@ -10,16 +11,11 @@ public class ServerHandler {
 
     private static UserService userService = new UserService();
 
-    public static AuthToken register(String registerData) {
+    public static AuthToken register(String registerData) throws UsernameAlreadyTakenException {
         AuthToken registerResponse = null;
-        try {
-            Gson gson = new Gson();
-            RegisterRequest myData = gson.fromJson(registerData, RegisterRequest.class);
-            registerResponse = userService.register(myData);
-        } catch (Exception e) {
-            System.out.println("Exception " + e + ": Error in converting json to object");
-        }
-
+        Gson gson = new Gson();
+        RegisterRequest myData = gson.fromJson(registerData, RegisterRequest.class);
+        registerResponse = userService.register(myData);
         return registerResponse;
     }
 }
