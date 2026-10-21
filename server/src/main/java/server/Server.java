@@ -24,7 +24,6 @@ public class Server {
 
     private static void register(Context ctx) {
         AuthToken myData = ServerHandler.register(ctx.body());
-
         var result = Map.of("username", "", "authToken", "");
         ctx.result(new Gson().toJson(result));
 
