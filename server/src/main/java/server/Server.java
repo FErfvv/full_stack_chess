@@ -46,6 +46,11 @@ public class Server {
         ctx.status(status);
     }
 
+    private static void clear(Context ctx) {
+        ServerHandler.clearDb();
+        ctx.status(200);
+    }
+
     public int run(int desiredPort) {
         javalin.start(desiredPort);
         return javalin.port();
@@ -54,4 +59,6 @@ public class Server {
     public void stop() {
         javalin.stop();
     }
+
+
 }

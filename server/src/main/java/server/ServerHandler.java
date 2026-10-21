@@ -9,11 +9,13 @@ import model.AuthToken;
 import model.UserData;
 import model.requests.RegisterRequest;
 import model.requests.RequestInterface;
+import service.AdminService;
 import service.UserService;
 
 public class ServerHandler {
     private static final DataAccess myDataAccess = new MemoryDataAccess();
     private static final UserService userService = new UserService(myDataAccess);
+    private static final AdminService adminService = new AdminService(myDataAccess);
     private static final Gson gson = new Gson();
 
     public static AuthToken register(String registerData) throws UsernameAlreadyTakenException, BadRequestException {
@@ -24,7 +26,7 @@ public class ServerHandler {
     }
 
     public static void clearDb() {
-
+        adminService.clearDb();
     }
 
     public static RequestInterface checkRequest(Class<? extends RequestInterface> requestType, String registerData) throws BadRequestException {
