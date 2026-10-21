@@ -1,14 +1,19 @@
 package service;
 
+import dataaccess.DataAccess;
+import dataaccess.MemoryDataAccess;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
 import model.AuthToken;
 import model.requests.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
-    UserService service = new UserService();
+    DataAccess testDataAccess = new MemoryDataAccess();
+    UserService service = new UserService(testDataAccess);
 
     @Test
     void registerNew() throws UsernameAlreadyTakenException {

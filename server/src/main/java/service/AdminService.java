@@ -9,4 +9,7 @@ public class AdminService {
         this.myDataAccess = myDataAccess;
     }
 
+    public void clearDb() {
+        myDataAccess.clear();
+    }
 }

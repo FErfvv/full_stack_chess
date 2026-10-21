@@ -14,7 +14,9 @@ public class MemoryDataAccess implements DataAccess {
     private final HashMap<String, GameData> gameList = new HashMap<>();
 
     public void clear() {
-
+        users.clear();
+        authDataHashMap.clear();
+        gameList.clear();
     }
 
     @Override
