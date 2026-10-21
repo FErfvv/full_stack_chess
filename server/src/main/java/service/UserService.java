@@ -13,7 +13,12 @@ import model.requests.RegisterRequest;
 import java.util.UUID;
 
 public class UserService {
-    DataAccess myDataAccess = new MemoryDataAccess();
+    private final DataAccess myDataAccess;
+
+    public UserService(DataAccess myDataAccess) {
+        this.myDataAccess = myDataAccess;
+    }
+
 
     public AuthToken register(RegisterRequest registerRequest) throws UsernameAlreadyTakenException {
         UserData currentUser = myDataAccess.getUser(registerRequest.username());
