@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
 import io.javalin.*;
 import io.javalin.http.Context;
@@ -32,6 +33,9 @@ public class Server {
         } catch (UsernameAlreadyTakenException e) {
             result = Map.of("message", "Error: username already taken");
             status = 403;
+        } catch (BadRequestException e) {
+            result = Map.of("message", "Error: bad request");
+            status = 400;
         }
 
         if (myData != null) {
