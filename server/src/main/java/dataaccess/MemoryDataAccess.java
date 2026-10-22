@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
 import model.UserData;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public class MemoryDataAccess implements DataAccess {
     private final HashMap<String, UserData> users = new HashMap<>();
     private final List<String> authDataHashMap = new ArrayList<>();
-    private final HashMap<String, GameData> gameList = new HashMap<>();
+    private final List<GameData> gameList = new ArrayList<>();
 
     public void clear() {
         users.clear();
@@ -29,8 +30,11 @@ public class MemoryDataAccess implements DataAccess {
     }
 
     @Override
-    public GameData createGame() {
-        return null;
+    public GameData createGame(String gameName) {
+        int gameId = gameList.size();
+        GameData newGame = new GameData(gameId, "", "", gameName, new ChessGame());
+        gameList.add(newGame);
+        return newGame;
     }
 
     @Override
