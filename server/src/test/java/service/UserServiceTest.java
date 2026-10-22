@@ -2,14 +2,14 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
-import model.AuthToken;
+import model.AuthData;
+import model.requests.AuthRequest;
 import model.requests.LoginRequest;
 import model.requests.RegisterRequest;
 import org.junit.jupiter.api.Test;
-
-import javax.xml.crypto.Data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,28 +28,44 @@ class UserServiceTest {
     void registerDuplicateUsername() throws UsernameAlreadyTakenException {
         String username = "john";
         RegisterRequest request = new RegisterRequest(username, "password", "jeff@gmail.com");
-        AuthToken expected = new AuthToken(username, "randomStringAuth");
+        AuthData expected = new AuthData(username, "randomStringAuth");
         assertEquals(expected.username(), service.register(request).username());
         assertThrows(UsernameAlreadyTakenException.class, () -> service.register(request));
     }
 
     @Test
-    void loginSuccessful() {
+    void validLogout() throws UsernameAlreadyTakenException {
         String username = "john";
         String password = "password";
         RegisterRequest registerRequest = new RegisterRequest(username, password, "jeff@gmail.com");
-        assertDoesNotThrow(() -> service.register(registerRequest));
+        AuthData authData = service.register(registerRequest);
+        AuthRequest authRequest = new AuthRequest(authData.authToken());
+        assertDoesNotThrow(() -> service.logout(authRequest));
+    }
+
+    @Test
+    void loginSuccessful() throws UsernameAlreadyTakenException, UnauthorizedException, DataAccessException {
+        String username = "john";
+        String password = "password";
+        RegisterRequest registerRequest = new RegisterRequest(username, password, "jeff@gmail.com");
+        AuthData authData = service.register(registerRequest);
+        AuthRequest authRequest = new AuthRequest(authData.authToken());
+        service.logout(authRequest);
         LoginRequest request = new LoginRequest(username, password);
         assertDoesNotThrow(() -> service.login(request));
     }
 
     @Test
-    void loginBadUsernamePassword() {
+    void loginBadUsernamePassword() throws UnauthorizedException, DataAccessException, UsernameAlreadyTakenException {
         String username = "john";
         String password = "password";
         RegisterRequest registerRequest = new RegisterRequest(username, password, "jeff@gmail.com");
-        assertDoesNotThrow(() -> service.register(registerRequest));
+        AuthData authData = service.register(registerRequest);
+        AuthRequest authRequest = new AuthRequest(authData.authToken());
+        service.logout(authRequest);
         assertThrows(UnauthorizedException.class, () -> service.login(new LoginRequest("james", password)));
         assertThrows(UnauthorizedException.class, () -> service.login(new LoginRequest(username, "notPassword")));
     }
+
+
 }

@@ -1,6 +1,5 @@
 package dataaccess;
 
-import model.AuthToken;
 import model.GameData;
 import model.UserData;
 
@@ -30,12 +29,12 @@ public interface DataAccess {
     public void updateGame(String id);
 
     // Create a new authorization.
-    public void createAuth(AuthToken authToken);
+    public void createAuth(String authToken);
 
     // Retrieve an authorization given an authToken.
-    public boolean getAuth(AuthToken authToken);
+    public boolean getAuth(String authToken);
 
     // Delete an authorization so that it is no longer valid.
-    public void deleteAuth(AuthToken authToken);
+    public boolean deleteAuth(String authToken);
 
 }

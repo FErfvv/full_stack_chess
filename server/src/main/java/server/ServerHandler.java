@@ -6,9 +6,7 @@ import dataaccess.MemoryDataAccess;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
-import jdk.jshell.spi.ExecutionControl;
-import model.AuthToken;
-import model.UserData;
+import model.AuthData;
 import model.requests.LoginRequest;
 import model.requests.RegisterRequest;
 import model.requests.RequestInterface;
@@ -21,11 +19,11 @@ public class ServerHandler {
     private static final AdminService adminService = new AdminService(myDataAccess);
     private static final Gson gson = new Gson();
 
-    public static AuthToken register(String registerData) throws UsernameAlreadyTakenException, BadRequestException {
+    public static AuthData register(String registerData) throws UsernameAlreadyTakenException, BadRequestException {
         return userService.register((RegisterRequest) checkRequest(RegisterRequest.class, registerData));
     }
 
-    public static AuthToken login(String loginData) throws BadRequestException, UnauthorizedException {
+    public static AuthData login(String loginData) throws BadRequestException, UnauthorizedException {
         return userService.login((LoginRequest) checkRequest(LoginRequest.class, loginData));
     }
 

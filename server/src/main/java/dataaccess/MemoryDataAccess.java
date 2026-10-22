@@ -1,6 +1,5 @@
 package dataaccess;
 
-import model.AuthToken;
 import model.GameData;
 import model.UserData;
 
@@ -10,7 +9,7 @@ import java.util.List;
 
 public class MemoryDataAccess implements DataAccess {
     private final HashMap<String, UserData> users = new HashMap<>();
-    private final List<AuthToken> authDataHashMap = new ArrayList<>();
+    private final List<String> authDataHashMap = new ArrayList<>();
     private final HashMap<String, GameData> gameList = new HashMap<>();
 
     public void clear() {
@@ -50,17 +49,17 @@ public class MemoryDataAccess implements DataAccess {
     }
 
     @Override
-    public void createAuth(AuthToken authToken) {
+    public void createAuth(String authToken) {
         authDataHashMap.add(authToken);
     }
 
     @Override
-    public boolean getAuth(AuthToken authToken) {
-        return false;
+    public boolean getAuth(String authToken) {
+        return authDataHashMap.contains(authToken);
     }
 
     @Override
-    public void deleteAuth(AuthToken authToken) {
-
+    public boolean deleteAuth(String authToken) {
+        return authDataHashMap.remove(authToken);
     }
 }

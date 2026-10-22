@@ -6,9 +6,7 @@ import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
 import io.javalin.*;
 import io.javalin.http.Context;
-import model.AuthToken;
-import model.UserData;
-import org.w3c.dom.UserDataHandler;
+import model.AuthData;
 
 import java.util.Map;
 
@@ -27,7 +25,7 @@ public class Server {
     }
 
     private static void register(Context ctx) {
-        AuthToken myData = null;
+        AuthData myData = null;
         Map<String, String> result = null;
         int status = 200;
         try {
@@ -49,7 +47,7 @@ public class Server {
     }
 
     private static void login(Context ctx) {
-        AuthToken myData = null;
+        AuthData myData = null;
         Map<String, String> result = null;
         int status = 200;
         try {

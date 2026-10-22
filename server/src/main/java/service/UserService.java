@@ -1,11 +1,10 @@
 package service;
 
 import dataaccess.DataAccess;
-import dataaccess.MemoryDataAccess;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
-import jdk.jshell.spi.ExecutionControl;
-import model.AuthToken;
+import model.AuthData;
 import model.UserData;
 import model.requests.AuthRequest;
 import model.requests.LoginRequest;
@@ -20,20 +19,19 @@ public class UserService {
         this.myDataAccess = myDataAccess;
     }
 
-
-    public AuthToken register(RegisterRequest registerRequest) throws UsernameAlreadyTakenException {
+    public AuthData register(RegisterRequest registerRequest) throws UsernameAlreadyTakenException {
         UserData currentUser = myDataAccess.getUser(registerRequest.username());
         if (currentUser != null) {
             throw new UsernameAlreadyTakenException(String.format("The Username: %s has already been taken", currentUser.username()));
         }
         currentUser = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
         myDataAccess.createUser(currentUser);
-        AuthToken myAuthData = new AuthToken(currentUser.username(), generateToken());
-        myDataAccess.createAuth(myAuthData);
+        AuthData myAuthData = new AuthData(currentUser.username(), generateToken());
+        myDataAccess.createAuth(myAuthData.authToken());
         return myAuthData;
     }
 
-    public AuthToken login(LoginRequest loginRequest) throws UnauthorizedException {
+    public AuthData login(LoginRequest loginRequest) throws UnauthorizedException {
         UserData currentUser = myDataAccess.getUser(loginRequest.username());
         if (currentUser == null) {
             throw new UnauthorizedException(String.format("Username '%s' does not exist", loginRequest.username()));
@@ -41,12 +39,18 @@ public class UserService {
         if (!currentUser.password().equals(loginRequest.password())) {
             throw new UnauthorizedException(String.format("Password '%s' is incorrect", loginRequest.username()));
         }
-        AuthToken myAuthData = new AuthToken(currentUser.username(), generateToken());
-        myDataAccess.createAuth(myAuthData);
+        AuthData myAuthData = new AuthData(currentUser.username(), generateToken());
+        myDataAccess.createAuth(myAuthData.authToken());
         return myAuthData;
     }
 
-    public void logout(AuthRequest logoutRequest) throws ExecutionControl.NotImplementedException {
+    public void logout(AuthRequest logoutRequest) throws UnauthorizedException, DataAccessException {
+        if (!myDataAccess.getAuth(logoutRequest.authToken())) {
+            throw new UnauthorizedException("Error: unauthorized");
+        }
+        if (!myDataAccess.deleteAuth(logoutRequest.authToken())) {
+            throw new DataAccessException("Error while deleting auth token");
+        }
     }
 
     private static String generateToken() {
