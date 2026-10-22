@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.exceptions.BadRequestException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
 import io.javalin.*;
@@ -19,7 +20,9 @@ public class Server {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.post("/user", Server::register);
         javalin.post("/session", Server::login);
-        javalin.delete("/db", ctx -> ctx.result("{}"));
+        javalin.delete("/session", Server::logout);
+        javalin.delete("/db", Server::clear);
+
         // Register your endpoints and exception handlers here.
 
     }
@@ -50,6 +53,7 @@ public class Server {
         AuthData myData = null;
         Map<String, String> result = null;
         int status = 200;
+
         try {
             myData = ServerHandler.login(ctx.body());
         } catch (UnauthorizedException e) {
@@ -65,6 +69,30 @@ public class Server {
         }
         ctx.contentType("application/json");
         ctx.result(new Gson().toJson(result));
+        ctx.status(status);
+    }
+
+    private static void logout(Context ctx) {
+        Map<String, String> result = null;
+        int status = 200;
+        try {
+            ServerHandler.logout(ctx.header("Authorization"));
+        } catch (UnauthorizedException e) {
+            result = Map.of("message", "Error: username or password is incorrect");
+            status = 401;
+        } catch (BadRequestException e) {
+            result = Map.of("message", "Error: bad request");
+            status = 400;
+        } catch (DataAccessException e) {
+            result = Map.of("message", "Error: error while deleting auth data");
+            status = 500;
+        }
+
+        if (result != null) {
+            ctx.contentType("application/json");
+            ctx.result(new Gson().toJson(result));
+        }
+
         ctx.status(status);
     }
 

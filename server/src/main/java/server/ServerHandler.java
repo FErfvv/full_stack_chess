@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
 import dataaccess.exceptions.BadRequestException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
 import model.AuthData;
+import model.requests.AuthRequest;
 import model.requests.LoginRequest;
 import model.requests.RegisterRequest;
 import model.requests.RequestInterface;
@@ -31,10 +33,20 @@ public class ServerHandler {
         adminService.clearDb();
     }
 
-    public static RequestInterface checkRequest(Class<? extends RequestInterface> requestType, String registerData) throws BadRequestException {
-        RequestInterface myData = gson.fromJson(registerData, requestType);
+    public static void logout(String authToken) throws BadRequestException, UnauthorizedException, DataAccessException {
+        if (authToken.isEmpty()) {
+            throw new BadRequestException("Error: empty request");
+        }
+        userService.logout(new AuthRequest(authToken));
+    }
+
+    public static RequestInterface checkRequest(Class<? extends RequestInterface> requestType, String requestData) throws BadRequestException {
+        if (requestData.isEmpty()) {
+            throw new BadRequestException("Error: empty request");
+        }
+        RequestInterface myData = gson.fromJson(requestData, requestType);
         if (!myData.isValidRequest()) {
-            throw new BadRequestException(String.format("%s is not a valid request", registerData));
+            throw new BadRequestException(String.format("%s is not a valid request", requestData));
         }
         return myData;
     }
