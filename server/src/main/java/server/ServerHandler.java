@@ -35,18 +35,18 @@ public class ServerHandler {
 
     public static void logout(String authToken) throws BadRequestException, UnauthorizedException, DataAccessException {
         if (authToken.isEmpty()) {
-            throw new BadRequestException("Error: empty request");
+            throw new BadRequestException();
         }
         userService.logout(new AuthRequest(authToken));
     }
 
     public static RequestInterface checkRequest(Class<? extends RequestInterface> requestType, String requestData) throws BadRequestException {
         if (requestData.isEmpty()) {
-            throw new BadRequestException("Error: empty request");
+            throw new BadRequestException();
         }
         RequestInterface myData = gson.fromJson(requestData, requestType);
         if (!myData.isValidRequest()) {
-            throw new BadRequestException(String.format("%s is not a valid request", requestData));
+            throw new BadRequestException();
         }
         return myData;
     }

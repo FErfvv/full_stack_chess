@@ -1,15 +1,13 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.exceptions.BadRequestException;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UnauthorizedException;
-import dataaccess.exceptions.UsernameAlreadyTakenException;
+import dataaccess.exceptions.*;
 import io.javalin.*;
 import io.javalin.http.Context;
 import model.AuthData;
 
 import java.util.Map;
+import java.util.Objects;
 
 
 public class Server {
@@ -22,78 +20,34 @@ public class Server {
         javalin.post("/session", Server::login);
         javalin.delete("/session", Server::logout);
         javalin.delete("/db", Server::clear);
+        javalin.exception(BasicResponseException.class, this::exceptionHandler);
 
         // Register your endpoints and exception handlers here.
 
     }
 
-    private static void register(Context ctx) {
-        AuthData myData = null;
-        Map<String, String> result = null;
-        int status = 200;
-        try {
-            myData = ServerHandler.register(ctx.body());
-        } catch (UsernameAlreadyTakenException e) {
-            result = Map.of("message", "Error: username already taken");
-            status = 403;
-        } catch (BadRequestException e) {
-            result = Map.of("message", "Error: bad request");
-            status = 400;
-        }
-
-        if (myData != null) {
-            result = Map.of("username", myData.username(), "authToken", myData.authToken());
-        }
-        ctx.contentType("application/json");
-        ctx.result(new Gson().toJson(result));
-        ctx.status(status);
+    private void exceptionHandler(BasicResponseException ex, Context ctx) {
+        ctx.status(ex.getHttpCode());
+        ctx.result(ex.getJsonMessage());
     }
 
-    private static void login(Context ctx) {
-        AuthData myData = null;
-        Map<String, String> result = null;
-        int status = 200;
-
-        try {
-            myData = ServerHandler.login(ctx.body());
-        } catch (UnauthorizedException e) {
-            result = Map.of("message", "Error: username or password is incorrect");
-            status = 401;
-        } catch (BadRequestException e) {
-            result = Map.of("message", "Error: bad request");
-            status = 400;
-        }
-
-        if (myData != null) {
-            result = Map.of("username", myData.username(), "authToken", myData.authToken());
-        }
+    private static void register(Context ctx) throws BadRequestException, UsernameAlreadyTakenException {
+        AuthData myData = ServerHandler.register(ctx.body());
         ctx.contentType("application/json");
-        ctx.result(new Gson().toJson(result));
-        ctx.status(status);
+        ctx.result(new Gson().toJson(Map.of("username", myData.username(), "authToken", myData.authToken())));
+        ctx.status(200);
     }
 
-    private static void logout(Context ctx) {
-        Map<String, String> result = null;
-        int status = 200;
-        try {
-            ServerHandler.logout(ctx.header("Authorization"));
-        } catch (UnauthorizedException e) {
-            result = Map.of("message", "Error: username or password is incorrect");
-            status = 401;
-        } catch (BadRequestException e) {
-            result = Map.of("message", "Error: bad request");
-            status = 400;
-        } catch (DataAccessException e) {
-            result = Map.of("message", "Error: error while deleting auth data");
-            status = 500;
-        }
+    private static void login(Context ctx) throws UnauthorizedException, BadRequestException {
+        AuthData myData = ServerHandler.login(ctx.body());
+        ctx.contentType("application/json");
+        ctx.result(new Gson().toJson(Map.of("username", myData.username(), "authToken", myData.authToken())));
+        ctx.status(200);
+    }
 
-        if (result != null) {
-            ctx.contentType("application/json");
-            ctx.result(new Gson().toJson(result));
-        }
-
-        ctx.status(status);
+    private static void logout(Context ctx) throws UnauthorizedException, BadRequestException, DataAccessException {
+        ServerHandler.logout(Objects.requireNonNull(ctx.header("Authorization")));
+        ctx.status(200);
     }
 
     private static void clear(Context ctx) {

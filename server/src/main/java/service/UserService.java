@@ -5,6 +5,7 @@ import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import model.requests.AuthRequest;
 import model.requests.LoginRequest;
@@ -22,7 +23,7 @@ public class UserService {
     public AuthData register(RegisterRequest registerRequest) throws UsernameAlreadyTakenException {
         UserData currentUser = myDataAccess.getUser(registerRequest.username());
         if (currentUser != null) {
-            throw new UsernameAlreadyTakenException(String.format("The Username: %s has already been taken", currentUser.username()));
+            throw new UsernameAlreadyTakenException(currentUser.username());
         }
         currentUser = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
         myDataAccess.createUser(currentUser);
@@ -46,11 +47,18 @@ public class UserService {
 
     public void logout(AuthRequest logoutRequest) throws UnauthorizedException, DataAccessException {
         if (!myDataAccess.getAuth(logoutRequest.authToken())) {
-            throw new UnauthorizedException("Error: unauthorized");
+            throw new UnauthorizedException("unauthorized");
         }
         if (!myDataAccess.deleteAuth(logoutRequest.authToken())) {
-            throw new DataAccessException("Error while deleting auth token");
+            throw new DataAccessException("problem while deleting auth token");
         }
+    }
+
+    public void createGame(AuthRequest authRequest, String gameName) throws UnauthorizedException {
+        if (!myDataAccess.getAuth(authRequest.authToken())) {
+            throw new UnauthorizedException("unauthorized");
+        }
+        GameData newGame = myDataAccess.createGame(gameName);
     }
 
     private static String generateToken() {
