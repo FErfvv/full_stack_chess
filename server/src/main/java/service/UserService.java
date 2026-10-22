@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
+import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
 import jdk.jshell.spi.ExecutionControl;
 import model.AuthToken;
@@ -32,8 +33,17 @@ public class UserService {
         return myAuthData;
     }
 
-    public AuthToken login(LoginRequest loginRequest) throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("login has not been implemented");
+    public AuthToken login(LoginRequest loginRequest) throws UnauthorizedException {
+        UserData currentUser = myDataAccess.getUser(loginRequest.username());
+        if (currentUser == null) {
+            throw new UnauthorizedException(String.format("Username '%s' does not exist", loginRequest.username()));
+        }
+        if (!currentUser.password().equals(loginRequest.password())) {
+            throw new UnauthorizedException(String.format("Password '%s' is incorrect", loginRequest.username()));
+        }
+        AuthToken myAuthData = new AuthToken(currentUser.username(), generateToken());
+        myDataAccess.createAuth(myAuthData);
+        return myAuthData;
     }
 
     public void logout(AuthRequest logoutRequest) throws ExecutionControl.NotImplementedException {
