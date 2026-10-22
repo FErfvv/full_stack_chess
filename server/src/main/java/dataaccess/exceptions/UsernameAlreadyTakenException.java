@@ -3,12 +3,8 @@ package dataaccess.exceptions;
 /**
  * Indicates the username was already taken
  */
-public class UsernameAlreadyTakenException extends Exception {
-    public UsernameAlreadyTakenException(String message) {
-        super(message);
-    }
-
-    public UsernameAlreadyTakenException(String message, Throwable ex) {
-        super(message, ex);
+public class UsernameAlreadyTakenException extends BasicResponseException {
+    public UsernameAlreadyTakenException(String username) {
+        super(String.format("Error: the username: %s has already been taken", username), 403);
     }
 }

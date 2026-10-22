@@ -3,12 +3,8 @@ package dataaccess.exceptions;
 /**
  * Indicates there was an error connecting to the database
  */
-public class UnauthorizedException extends Exception {
+public class UnauthorizedException extends BasicResponseException {
     public UnauthorizedException(String message) {
-        super(message);
-    }
-
-    public UnauthorizedException(String message, Throwable ex) {
-        super(message, ex);
+        super(String.format("Error: %s", message), 401);
     }
 }

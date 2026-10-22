@@ -1,12 +1,14 @@
 package dataaccess.exceptions;
 
+import com.google.gson.Gson;
+
 import java.util.Map;
 
-public class BasicException extends Exception {
+public class BasicResponseException extends Exception {
 
     private final int httpCode;
 
-    public BasicException(String message, int httpCode) {
+    public BasicResponseException(String message, int httpCode) {
         super(message);
         this.httpCode = httpCode;
     }
@@ -15,8 +17,8 @@ public class BasicException extends Exception {
         return httpCode;
     }
 
-    public Map<String, String> getJsonMessage() {
-        return Map.of("message", getMessage());
+    public String getJsonMessage() {
+        return new Gson().toJson(Map.of("message", getMessage()));
     }
 
 }
