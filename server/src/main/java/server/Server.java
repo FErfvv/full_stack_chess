@@ -19,6 +19,7 @@ public class Server {
         javalin.post("/user", Server::register);
         javalin.post("/session", Server::login);
         javalin.delete("/session", Server::logout);
+        javalin.post("/game", Server::createGame);
         javalin.delete("/db", Server::clear);
         javalin.exception(BasicResponseException.class, this::exceptionHandler);
 
@@ -47,6 +48,13 @@ public class Server {
 
     private static void logout(Context ctx) throws UnauthorizedException, BadRequestException, DataAccessException {
         ServerHandler.logout(Objects.requireNonNull(ctx.header("Authorization")));
+        ctx.status(200);
+    }
+
+    private static void createGame(Context ctx) throws UnauthorizedException, BadRequestException {
+        int gameId = ServerHandler.createGame(Objects.requireNonNull(ctx.header("Authorization")), ctx.body());
+        System.out.println(gameId);
+        ctx.result(new Gson().toJson(Map.of("gameID", gameId)));
         ctx.status(200);
     }
 

@@ -8,10 +8,7 @@ import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
 import model.AuthData;
-import model.requests.AuthRequest;
-import model.requests.LoginRequest;
-import model.requests.RegisterRequest;
-import model.requests.RequestInterface;
+import model.requests.*;
 import service.AdminService;
 import service.UserService;
 
@@ -38,6 +35,13 @@ public class ServerHandler {
             throw new BadRequestException();
         }
         userService.logout(new AuthRequest(authToken));
+    }
+
+    public static int createGame(String authToken, String gameName) throws BadRequestException, UnauthorizedException {
+        if (authToken.isEmpty()) {
+            throw new BadRequestException();
+        }
+        return userService.createGame(new AuthRequest(authToken), (NewGameRequest) checkRequest(NewGameRequest.class, gameName));
     }
 
     public static RequestInterface checkRequest(Class<? extends RequestInterface> requestType, String requestData) throws BadRequestException {

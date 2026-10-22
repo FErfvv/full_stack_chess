@@ -31,7 +31,7 @@ public class MemoryDataAccess implements DataAccess {
 
     @Override
     public GameData createGame(String gameName) {
-        int gameId = gameList.size();
+        int gameId = gameList.size() + 1;
         GameData newGame = new GameData(gameId, "", "", gameName, new ChessGame());
         gameList.add(newGame);
         return newGame;

@@ -9,6 +9,7 @@ import model.GameData;
 import model.UserData;
 import model.requests.AuthRequest;
 import model.requests.LoginRequest;
+import model.requests.NewGameRequest;
 import model.requests.RegisterRequest;
 
 import java.util.UUID;
@@ -54,11 +55,12 @@ public class UserService {
         }
     }
 
-    public void createGame(AuthRequest authRequest, String gameName) throws UnauthorizedException {
+    public int createGame(AuthRequest authRequest, NewGameRequest gameRequest) throws UnauthorizedException {
         if (!myDataAccess.getAuth(authRequest.authToken())) {
             throw new UnauthorizedException("unauthorized");
         }
-        GameData newGame = myDataAccess.createGame(gameName);
+        GameData newGame = myDataAccess.createGame(gameRequest.gameName());
+        return newGame.gameID();
     }
 
     private static String generateToken() {
