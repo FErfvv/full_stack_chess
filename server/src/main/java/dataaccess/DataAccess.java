@@ -1,7 +1,12 @@
 package dataaccess;
 
+import dataaccess.exceptions.ColorTakenException;
+import dataaccess.exceptions.NoGameException;
+import model.AuthData;
 import model.GameData;
 import model.UserData;
+import model.requests.AuthRequest;
+import model.requests.JoinGameRequest;
 import model.responses.GameListResponseData;
 
 import java.util.ArrayList;
@@ -28,15 +33,15 @@ public interface DataAccess {
     public List<GameListResponseData> listGames();
 
     // This is used when players join a game or when a move is made.
-    public void updateGame(String id);
+    public void updateGame(JoinGameRequest joinGameRequest, UserData userData) throws NoGameException, ColorTakenException;
 
     // Create a new authorization.
-    public void createAuth(String authToken);
+    public void createAuth(AuthData authToken);
 
     // Retrieve an authorization given an authToken.
-    public boolean getAuth(String authToken);
+    public String getAuth(String authToken);
 
     // Delete an authorization so that it is no longer valid.
-    public boolean deleteAuth(String authToken);
+    public boolean deleteAuth(AuthData authData);
 
 }

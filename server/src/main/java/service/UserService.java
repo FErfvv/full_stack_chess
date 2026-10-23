@@ -1,16 +1,11 @@
 package service;
 
 import dataaccess.DataAccess;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UnauthorizedException;
-import dataaccess.exceptions.UsernameAlreadyTakenException;
+import dataaccess.exceptions.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import model.requests.AuthRequest;
-import model.requests.LoginRequest;
-import model.requests.NewGameRequest;
-import model.requests.RegisterRequest;
+import model.requests.*;
 import model.responses.GameListResponseData;
 
 import java.util.List;
@@ -31,7 +26,7 @@ public class UserService {
         currentUser = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
         myDataAccess.createUser(currentUser);
         AuthData myAuthData = new AuthData(currentUser.username(), generateToken());
-        myDataAccess.createAuth(myAuthData.authToken());
+        myDataAccess.createAuth(myAuthData);
         return myAuthData;
     }
 
@@ -44,25 +39,35 @@ public class UserService {
             throw new UnauthorizedException(String.format("Password '%s' is incorrect", loginRequest.username()));
         }
         AuthData myAuthData = new AuthData(currentUser.username(), generateToken());
-        myDataAccess.createAuth(myAuthData.authToken());
+        myDataAccess.createAuth(myAuthData);
         return myAuthData;
     }
 
     public void logout(AuthRequest logoutRequest) throws UnauthorizedException, DataAccessException {
-        if (!myDataAccess.getAuth(logoutRequest.authToken())) {
+        String username = myDataAccess.getAuth(logoutRequest.authToken());
+        if (username == null) {
             throw new UnauthorizedException("unauthorized");
         }
-        if (!myDataAccess.deleteAuth(logoutRequest.authToken())) {
+        if (!myDataAccess.deleteAuth(new AuthData(username, logoutRequest.authToken()))) {
             throw new DataAccessException("problem while deleting auth token");
         }
     }
 
     public int createGame(AuthRequest authRequest, NewGameRequest gameRequest) throws UnauthorizedException {
-        if (!myDataAccess.getAuth(authRequest.authToken())) {
+        if (myDataAccess.getAuth(authRequest.authToken()) == null) {
             throw new UnauthorizedException("unauthorized");
         }
         GameData newGame = myDataAccess.createGame(gameRequest.gameName());
         return newGame.gameID();
+    }
+
+    public void addUserToGame(AuthRequest authRequest, JoinGameRequest joinGameRequest) throws UnauthorizedException, ColorTakenException, NoGameException {
+        String username = myDataAccess.getAuth(authRequest.authToken());
+        if (username == null) {
+            throw new UnauthorizedException("unauthorized");
+        }
+        UserData user = myDataAccess.getUser(username);
+        myDataAccess.updateGame(joinGameRequest, user);
     }
 
     private static String generateToken() {
@@ -70,7 +75,7 @@ public class UserService {
     }
 
     public List<GameListResponseData> listGames(AuthRequest authRequest) throws UnauthorizedException {
-        if (!myDataAccess.getAuth(authRequest.authToken())) {
+        if (myDataAccess.getAuth(authRequest.authToken()) == null) {
             throw new UnauthorizedException("unauthorized");
         }
         return myDataAccess.listGames();

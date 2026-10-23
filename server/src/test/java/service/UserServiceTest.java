@@ -3,16 +3,10 @@ package service;
 import chess.ChessGame;
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
-import dataaccess.exceptions.BadRequestException;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UnauthorizedException;
-import dataaccess.exceptions.UsernameAlreadyTakenException;
+import dataaccess.exceptions.*;
 import model.AuthData;
 import model.GameData;
-import model.requests.AuthRequest;
-import model.requests.LoginRequest;
-import model.requests.NewGameRequest;
-import model.requests.RegisterRequest;
+import model.requests.*;
 import model.responses.GameListResponseData;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -20,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -95,5 +90,17 @@ class UserServiceTest {
 
         List<GameListResponseData> actualGameList = service.listGames(new AuthRequest(authData.authToken()));
         assertEquals(actualGameList, expectedGameList);
+    }
+
+    @Test
+    @Order(8)
+    void addUserToGame() {
+        JoinGameRequest joinGameRequest = new JoinGameRequest("white", "1");
+        JoinGameRequest invalidJoinGameRequest = new JoinGameRequest("white", "-1");
+        assertDoesNotThrow(() -> service.addUserToGame(new AuthRequest(authData.authToken()), joinGameRequest));
+        assertThrows(ColorTakenException.class, () -> service.addUserToGame(new AuthRequest(authData.authToken()), joinGameRequest));
+        assertThrows(UnauthorizedException.class, () -> service.addUserToGame(new AuthRequest(badAuthToken), joinGameRequest));
+        assertThrows(NoGameException.class, () -> service.addUserToGame(new AuthRequest(authData.authToken()), invalidJoinGameRequest));
+
     }
 }
