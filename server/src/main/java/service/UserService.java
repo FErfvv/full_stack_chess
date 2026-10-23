@@ -61,7 +61,7 @@ public class UserService {
         return newGame.gameID();
     }
 
-    public void addUserToGame(AuthRequest authRequest, JoinGameRequest joinGameRequest) throws UnauthorizedException, ColorTakenException, NoGameException {
+    public void addUserToGame(AuthRequest authRequest, JoinGameRequest joinGameRequest) throws UnauthorizedException, ColorTakenException, NoGameException, BadRequestException {
         String username = myDataAccess.getAuth(authRequest.authToken());
         if (username == null) {
             throw new UnauthorizedException("unauthorized");

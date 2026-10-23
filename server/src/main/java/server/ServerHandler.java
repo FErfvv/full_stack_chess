@@ -3,10 +3,7 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
-import dataaccess.exceptions.BadRequestException;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.UnauthorizedException;
-import dataaccess.exceptions.UsernameAlreadyTakenException;
+import dataaccess.exceptions.*;
 import model.AuthData;
 import model.GameData;
 import model.requests.*;
@@ -53,6 +50,13 @@ public class ServerHandler {
             throw new BadRequestException();
         }
         return userService.listGames(new AuthRequest(authToken));
+    }
+
+    public static void addUserToGame(String authToken, String joinGameData) throws BadRequestException, ColorTakenException, UnauthorizedException, NoGameException {
+        if (authToken.isEmpty()) {
+            throw new BadRequestException();
+        }
+        userService.addUserToGame(new AuthRequest(authToken), (JoinGameRequest) checkRequest(JoinGameRequest.class, joinGameData));
     }
 
     public static RequestInterface checkRequest(Class<? extends RequestInterface> requestType, String requestData) throws BadRequestException {

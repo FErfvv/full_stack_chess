@@ -25,6 +25,7 @@ public class Server {
         javalin.post("/game", Server::createGame);
         javalin.delete("/db", Server::clear);
         javalin.get("/game", Server::listGames);
+        javalin.put("/game", Server::joinGame);
         javalin.exception(BasicResponseException.class, this::exceptionHandler);
 
         // Register your endpoints and exception handlers here.
@@ -64,6 +65,11 @@ public class Server {
     private static void listGames(Context ctx) throws UnauthorizedException, BadRequestException {
         List<GameListResponseData> gameDataList = ServerHandler.listGames(Objects.requireNonNull(ctx.header("Authorization")));
         ctx.result(new Gson().toJson(Map.of("games", gameDataList)));
+        ctx.status(200);
+    }
+
+    private static void joinGame(Context ctx) throws ColorTakenException, UnauthorizedException, BadRequestException, NoGameException {
+        ServerHandler.addUserToGame(Objects.requireNonNull(ctx.header("Authorization")), ctx.body());
         ctx.status(200);
     }
 

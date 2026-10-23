@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.ColorTakenException;
 import dataaccess.exceptions.NoGameException;
 import model.AuthData;
@@ -39,7 +40,7 @@ public class MemoryDataAccess implements DataAccess {
     @Override
     public GameData createGame(String gameName) {
         int gameId = gameList.size() + 1;
-        GameData newGame = new GameData(gameId, "", "", gameName, new ChessGame());
+        GameData newGame = new GameData(gameId, null, null, gameName, new ChessGame());
         gameList.add(newGame);
         return newGame;
     }
@@ -59,7 +60,7 @@ public class MemoryDataAccess implements DataAccess {
     }
 
     @Override
-    public void updateGame(JoinGameRequest joinGameRequest, UserData user) throws NoGameException, ColorTakenException {
+    public void updateGame(JoinGameRequest joinGameRequest, UserData user) throws NoGameException, ColorTakenException, BadRequestException {
         GameData targetGame = null;
         for (GameData game : gameList) {
             if (game.gameID() == Integer.parseInt(joinGameRequest.gameID())) {
@@ -70,9 +71,14 @@ public class MemoryDataAccess implements DataAccess {
         if (targetGame == null) {
             throw new NoGameException();
         }
-        if (joinGameRequest.playerColor().equals("black") && targetGame.blackUsername().isEmpty()) {
+        boolean isBlack = joinGameRequest.playerColor().equals(ChessGame.TeamColor.BLACK.name());
+        boolean isWhite = joinGameRequest.playerColor().equals(ChessGame.TeamColor.WHITE.name());
+        if (!isBlack && !isWhite) {
+            throw new BadRequestException();
+        }
+        if (isBlack && targetGame.blackUsername() == null) {
             targetGame.setBlackUsername(user.username());
-        } else if (joinGameRequest.playerColor().equals("white") && targetGame.whiteUsername().isEmpty()) {
+        } else if (isWhite && targetGame.whiteUsername() == null) {
             targetGame.setWhiteUsername(user.username());
         } else {
             throw new ColorTakenException();

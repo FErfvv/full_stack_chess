@@ -1,5 +1,6 @@
 package dataaccess;
 
+import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.ColorTakenException;
 import dataaccess.exceptions.NoGameException;
 import model.AuthData;
@@ -33,7 +34,7 @@ public interface DataAccess {
     public List<GameListResponseData> listGames();
 
     // This is used when players join a game or when a move is made.
-    public void updateGame(JoinGameRequest joinGameRequest, UserData userData) throws NoGameException, ColorTakenException;
+    public void updateGame(JoinGameRequest joinGameRequest, UserData userData) throws NoGameException, ColorTakenException, BadRequestException;
 
     // Create a new authorization.
     public void createAuth(AuthData authToken);
