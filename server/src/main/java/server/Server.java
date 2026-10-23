@@ -5,7 +5,10 @@ import dataaccess.exceptions.*;
 import io.javalin.*;
 import io.javalin.http.Context;
 import model.AuthData;
+import model.GameData;
+import model.responses.GameListResponseData;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,6 +24,7 @@ public class Server {
         javalin.delete("/session", Server::logout);
         javalin.post("/game", Server::createGame);
         javalin.delete("/db", Server::clear);
+        javalin.get("/game", Server::listGames);
         javalin.exception(BasicResponseException.class, this::exceptionHandler);
 
         // Register your endpoints and exception handlers here.
@@ -53,8 +57,13 @@ public class Server {
 
     private static void createGame(Context ctx) throws UnauthorizedException, BadRequestException {
         int gameId = ServerHandler.createGame(Objects.requireNonNull(ctx.header("Authorization")), ctx.body());
-        System.out.println(gameId);
         ctx.result(new Gson().toJson(Map.of("gameID", gameId)));
+        ctx.status(200);
+    }
+
+    private static void listGames(Context ctx) throws UnauthorizedException, BadRequestException {
+        List<GameListResponseData> gameDataList = ServerHandler.listGames(Objects.requireNonNull(ctx.header("Authorization")));
+        ctx.result(new Gson().toJson(Map.of("games", gameDataList)));
         ctx.status(200);
     }
 

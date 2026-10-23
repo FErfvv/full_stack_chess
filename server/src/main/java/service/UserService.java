@@ -11,6 +11,7 @@ import model.requests.AuthRequest;
 import model.requests.LoginRequest;
 import model.requests.NewGameRequest;
 import model.requests.RegisterRequest;
+import model.responses.GameListResponseData;
 
 import java.util.List;
 import java.util.UUID;
@@ -68,7 +69,7 @@ public class UserService {
         return UUID.randomUUID().toString();
     }
 
-    public List<GameData> listGames(AuthRequest authRequest) throws UnauthorizedException {
+    public List<GameListResponseData> listGames(AuthRequest authRequest) throws UnauthorizedException {
         if (!myDataAccess.getAuth(authRequest.authToken())) {
             throw new UnauthorizedException("unauthorized");
         }

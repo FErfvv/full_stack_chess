@@ -8,9 +8,13 @@ import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameAlreadyTakenException;
 import model.AuthData;
+import model.GameData;
 import model.requests.*;
+import model.responses.GameListResponseData;
 import service.AdminService;
 import service.UserService;
+
+import java.util.List;
 
 public class ServerHandler {
     private static final DataAccess myDataAccess = new MemoryDataAccess();
@@ -44,6 +48,13 @@ public class ServerHandler {
         return userService.createGame(new AuthRequest(authToken), (NewGameRequest) checkRequest(NewGameRequest.class, gameName));
     }
 
+    public static List<GameListResponseData> listGames(String authToken) throws BadRequestException, UnauthorizedException {
+        if (authToken.isEmpty()) {
+            throw new BadRequestException();
+        }
+        return userService.listGames(new AuthRequest(authToken));
+    }
+
     public static RequestInterface checkRequest(Class<? extends RequestInterface> requestType, String requestData) throws BadRequestException {
         if (requestData.isEmpty()) {
             throw new BadRequestException();
@@ -54,4 +65,6 @@ public class ServerHandler {
         }
         return myData;
     }
+
+
 }

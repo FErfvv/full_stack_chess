@@ -3,7 +3,9 @@ package dataaccess;
 import chess.ChessGame;
 import model.GameData;
 import model.UserData;
+import model.responses.GameListResponseData;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +45,12 @@ public class MemoryDataAccess implements DataAccess {
     }
 
     @Override
-    public List<GameData> listGames() {
-        return gameList;
+    public List<GameListResponseData> listGames() {
+        List<GameListResponseData> responseData = new ArrayList<>();
+        for (GameData game : gameList) {
+            responseData.add(new GameListResponseData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName()));
+        }
+        return responseData;
     }
 
     @Override

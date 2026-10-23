@@ -2,6 +2,7 @@ package dataaccess;
 
 import model.GameData;
 import model.UserData;
+import model.responses.GameListResponseData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public interface DataAccess {
     public GameData getGame(String gameID);
 
     // Retrieve all games.
-    public List<GameData> listGames();
+    public List<GameListResponseData> listGames();
 
     // This is used when players join a game or when a move is made.
     public void updateGame(String id);

@@ -13,6 +13,7 @@ import model.requests.AuthRequest;
 import model.requests.LoginRequest;
 import model.requests.NewGameRequest;
 import model.requests.RegisterRequest;
+import model.responses.GameListResponseData;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -81,18 +82,18 @@ class UserServiceTest {
     @Test
     @Order(7)
     void listGames() throws UnauthorizedException {
-        List<GameData> expectedGameList = new ArrayList<>();
+        List<GameListResponseData> expectedGameList = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
-            expectedGameList.add(new GameData(i, "", "", String.format("game%s", i), new ChessGame()));
+            expectedGameList.add(new GameListResponseData(i, "", "", String.format("game%s", i)));
         }
-        for (GameData game : expectedGameList) {
+        for (GameListResponseData game : expectedGameList) {
             if (game.gameID() == 1) {
                 continue;
             }
             service.createGame(new AuthRequest(authData.authToken()), new NewGameRequest(game.gameName()));
         }
 
-        List<GameData> actualGameList = service.listGames(new AuthRequest(authData.authToken()));
+        List<GameListResponseData> actualGameList = service.listGames(new AuthRequest(authData.authToken()));
         assertEquals(actualGameList, expectedGameList);
     }
 }
