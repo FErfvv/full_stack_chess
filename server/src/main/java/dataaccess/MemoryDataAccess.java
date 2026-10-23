@@ -43,8 +43,8 @@ public class MemoryDataAccess implements DataAccess {
     }
 
     @Override
-    public ArrayList<GameData> listGames() {
-        return null;
+    public List<GameData> listGames() {
+        return gameList;
     }
 
     @Override

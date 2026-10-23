@@ -4,6 +4,7 @@ import model.GameData;
 import model.UserData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface DataAccess {
 
@@ -23,7 +24,7 @@ public interface DataAccess {
     public GameData getGame(String gameID);
 
     // Retrieve all games.
-    public ArrayList<GameData> listGames();
+    public List<GameData> listGames();
 
     // This is used when players join a game or when a move is made.
     public void updateGame(String id);

@@ -12,6 +12,7 @@ import model.requests.LoginRequest;
 import model.requests.NewGameRequest;
 import model.requests.RegisterRequest;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
@@ -65,5 +66,12 @@ public class UserService {
 
     private static String generateToken() {
         return UUID.randomUUID().toString();
+    }
+
+    public List<GameData> listGames(AuthRequest authRequest) throws UnauthorizedException {
+        if (!myDataAccess.getAuth(authRequest.authToken())) {
+            throw new UnauthorizedException("unauthorized");
+        }
+        return myDataAccess.listGames();
     }
 }
