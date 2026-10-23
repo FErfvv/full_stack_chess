@@ -25,10 +25,6 @@ public class GameData {
         return gameName;
     }
 
-    public ChessGame chessGame() {
-        return chessGame;
-    }
-
     public void setWhiteUsername(String username) {
         this.whiteUsername = username;
     }
