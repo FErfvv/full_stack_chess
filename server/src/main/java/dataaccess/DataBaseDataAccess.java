@@ -11,12 +11,9 @@ import model.UserData;
 import model.requests.JoinGameRequest;
 import model.responses.GameListResponseData;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class DataBaseDataAccess implements DataAccess {
-
 
     public void clear() {
         throw new NotImplementedError();

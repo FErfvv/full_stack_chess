@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.DatabaseManager;
 import dataaccess.exceptions.*;
 import io.javalin.*;
 import io.javalin.http.Context;
@@ -16,6 +17,14 @@ import java.util.Objects;
 public class Server {
 
     private final Javalin javalin;
+
+    static {
+        try {
+            DatabaseManager.createDatabase();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));

@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
+import dataaccess.DataBaseDataAccess;
 import dataaccess.MemoryDataAccess;
 import dataaccess.exceptions.*;
 import model.AuthData;
@@ -13,7 +14,7 @@ import service.UserService;
 import java.util.List;
 
 public class ServerHandler {
-    private static final DataAccess MY_DATA_ACCESS = new MemoryDataAccess();
+    private static final DataAccess MY_DATA_ACCESS = new DataBaseDataAccess();
     private static final UserService USER_SERVICE = new UserService(MY_DATA_ACCESS);
     private static final AdminService ADMIN_SERVICE = new AdminService(MY_DATA_ACCESS);
     private static final Gson GSON = new Gson();
