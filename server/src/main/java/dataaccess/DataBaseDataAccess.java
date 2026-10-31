@@ -15,6 +15,14 @@ import java.util.List;
 
 public class DataBaseDataAccess implements DataAccess {
 
+    static {
+        try {
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void clear() {
         throw new NotImplementedError();
     }
