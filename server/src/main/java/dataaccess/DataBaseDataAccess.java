@@ -72,8 +72,7 @@ public class DataBaseDataAccess implements DataAccess {
     }
 
 
-    private final String[][] createStatements = {
-            {
+    private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  users (
               `username` varchar(256) NOT NULL,
@@ -81,9 +80,7 @@ public class DataBaseDataAccess implements DataAccess {
               PRIMARY KEY (`username`),
               INDEX(username)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-            """
-            },
-            {
+            """,
             """
             CREATE TABLE IF NOT EXISTS  authData (
               `authToken` varchar(256) NOT NULL,
@@ -91,9 +88,7 @@ public class DataBaseDataAccess implements DataAccess {
               PRIMARY KEY (`authToken`),
               INDEX(authToken)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-            """
-            },
-            {
+            """,
             """
             CREATE TABLE IF NOT EXISTS  gameList (
               `id` int NOT NULL AUTO_INCREMENT,
@@ -102,17 +97,14 @@ public class DataBaseDataAccess implements DataAccess {
               INDEX(id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
-            },
     };
 
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (Connection conn = DatabaseManager.getConnection()) {
-            for (String[] table : createStatements) {
-                for (String statement: table) {
-                    try (var preparedStatement = conn.prepareStatement(statement)) {
-                        preparedStatement.executeUpdate();
-                    }
+            for (String statement : createStatements) {
+                try (var preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
                 }
             }
         } catch (SQLException ex) {
