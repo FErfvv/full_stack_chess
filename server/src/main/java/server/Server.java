@@ -38,14 +38,14 @@ public class Server {
         ctx.result(ex.getJsonMessage());
     }
 
-    private static void register(Context ctx) throws BadRequestException, UsernameAlreadyTakenException {
+    private static void register(Context ctx) throws BadRequestException, UsernameAlreadyTakenException, DataAccessException {
         AuthData myData = ServerHandler.register(ctx.body());
         ctx.contentType("application/json");
         ctx.result(new Gson().toJson(Map.of("username", myData.username(), "authToken", myData.authToken())));
         ctx.status(200);
     }
 
-    private static void login(Context ctx) throws UnauthorizedException, BadRequestException {
+    private static void login(Context ctx) throws UnauthorizedException, BadRequestException, DataAccessException {
         AuthData myData = ServerHandler.login(ctx.body());
         ctx.contentType("application/json");
         ctx.result(new Gson().toJson(Map.of("username", myData.username(), "authToken", myData.authToken())));
@@ -69,7 +69,7 @@ public class Server {
         ctx.status(200);
     }
 
-    private static void joinGame(Context ctx) throws ColorTakenException, UnauthorizedException, BadRequestException, NoGameException {
+    private static void joinGame(Context ctx) throws ColorTakenException, UnauthorizedException, BadRequestException, NoGameException, DataAccessException {
         ServerHandler.addUserToGame(Objects.requireNonNull(ctx.header("Authorization")), ctx.body());
         ctx.status(200);
     }

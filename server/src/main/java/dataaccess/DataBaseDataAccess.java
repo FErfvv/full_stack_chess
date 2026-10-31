@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.ColorTakenException;
 import dataaccess.exceptions.DataAccessException;
@@ -27,13 +28,38 @@ public class DataBaseDataAccess implements DataAccess {
     }
 
     @Override
-    public void createUser(UserData currentUser) {
-
+    public void createUser(UserData currentUser) throws DataAccessException {
+        var statement = "INSERT INTO users (username, json) VALUES (?, ?)";
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, currentUser.username());
+                String json = new Gson().toJson(currentUser);
+                preparedStatement.setString(2, json);
+                preparedStatement.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to create a User: %s", e.toString()));
+        }
     }
 
     @Override
-    public UserData getUser(String username) {
-        throw new NotImplementedError();
+    public UserData getUser(String username) throws DataAccessException {
+        String statement = "SELECT json FROM users WHERE username=?";
+        UserData user = null;
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, username);
+                try (var response = preparedStatement.executeQuery()) {
+                    while (response.next()) {
+                        user = new Gson().fromJson(response.getString("json"), UserData.class);
+
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to get a User: %s", e.toString()));
+        }
+        return user;
     }
 
     @Override
@@ -57,8 +83,18 @@ public class DataBaseDataAccess implements DataAccess {
     }
 
     @Override
-    public void createAuth(AuthData authToken) {
-        throw new NotImplementedError();
+    public void createAuth(AuthData authToken) throws DataAccessException {
+        var statement = "INSERT INTO authData (authToken, json) VALUES (?, ?)";
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, authToken.authToken());
+                String json = new Gson().toJson(authToken);
+                preparedStatement.setString(2, json);
+                preparedStatement.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to save AuthData: %s", e.toString()));
+        }
     }
 
     @Override

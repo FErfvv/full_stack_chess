@@ -8,6 +8,7 @@ import model.UserData;
 import model.requests.*;
 import model.responses.GameListResponseData;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public class UserService {
         this.myDataAccess = myDataAccess;
     }
 
-    public AuthData register(RegisterRequest registerRequest) throws UsernameAlreadyTakenException {
+    public AuthData register(RegisterRequest registerRequest) throws UsernameAlreadyTakenException, DataAccessException {
         UserData currentUser = myDataAccess.getUser(registerRequest.username());
         if (currentUser != null) {
             throw new UsernameAlreadyTakenException(currentUser.username());
@@ -30,7 +31,7 @@ public class UserService {
         return myAuthData;
     }
 
-    public AuthData login(LoginRequest loginRequest) throws UnauthorizedException {
+    public AuthData login(LoginRequest loginRequest) throws UnauthorizedException, DataAccessException {
         UserData currentUser = myDataAccess.getUser(loginRequest.username());
         if (currentUser == null) {
             throw new UnauthorizedException(String.format("Username '%s' does not exist", loginRequest.username()));
@@ -65,7 +66,7 @@ public class UserService {
             throws UnauthorizedException,
             ColorTakenException,
             NoGameException,
-            BadRequestException {
+            BadRequestException, DataAccessException {
         String username = myDataAccess.getAuth(authRequest.authToken());
         if (username == null) {
             throw new UnauthorizedException("unauthorized");

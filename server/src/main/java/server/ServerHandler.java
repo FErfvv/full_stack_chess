@@ -28,11 +28,11 @@ public class ServerHandler {
     private static final AdminService ADMIN_SERVICE = new AdminService(MY_DATA_ACCESS);
     private static final Gson GSON = new Gson();
 
-    public static AuthData register(String registerData) throws UsernameAlreadyTakenException, BadRequestException {
+    public static AuthData register(String registerData) throws UsernameAlreadyTakenException, BadRequestException, DataAccessException {
         return USER_SERVICE.register((RegisterRequest) checkRequest(RegisterRequest.class, registerData));
     }
 
-    public static AuthData login(String loginData) throws BadRequestException, UnauthorizedException {
+    public static AuthData login(String loginData) throws BadRequestException, UnauthorizedException, DataAccessException {
         return USER_SERVICE.login((LoginRequest) checkRequest(LoginRequest.class, loginData));
     }
 
@@ -65,7 +65,7 @@ public class ServerHandler {
             throws BadRequestException,
             ColorTakenException,
             UnauthorizedException,
-            NoGameException {
+            NoGameException, DataAccessException {
         if (authToken.isEmpty()) {
             throw new BadRequestException();
         }

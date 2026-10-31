@@ -2,6 +2,7 @@ package dataaccess;
 
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.ColorTakenException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.NoGameException;
 import model.AuthData;
 import model.GameData;
@@ -10,6 +11,7 @@ import model.requests.AuthRequest;
 import model.requests.JoinGameRequest;
 import model.responses.GameListResponseData;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +21,10 @@ public interface DataAccess {
     public void clear();
 
     // Create a new user.
-    public void createUser(UserData currentUser);
+    public void createUser(UserData currentUser) throws DataAccessException;
 
     // Retrieve a user with the given username.
-    public UserData getUser(String username);
+    public UserData getUser(String username) throws DataAccessException;
 
     // Create a new game.
     public GameData createGame(String gameName);
@@ -37,7 +39,7 @@ public interface DataAccess {
     public void updateGame(JoinGameRequest joinGameRequest, UserData userData) throws NoGameException, ColorTakenException, BadRequestException;
 
     // Create a new authorization.
-    public void createAuth(AuthData authToken);
+    public void createAuth(AuthData authToken) throws DataAccessException;
 
     // Retrieve an authorization given an authToken.
     public String getAuth(String authToken);

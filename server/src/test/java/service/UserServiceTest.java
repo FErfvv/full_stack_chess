@@ -66,7 +66,7 @@ class UserServiceTest {
 
     @Test
     @Order(6)
-    void createGame() throws UnauthorizedException {
+    void createGame() throws UnauthorizedException, DataAccessException {
         authData = USER_SERVICE.login(new LoginRequest(USERNAME, PASSWORD));
         assertThrows(UnauthorizedException.class, () -> USER_SERVICE.createGame(new AuthRequest(BAD_AUTH_TOKEN), new NewGameRequest("My Game")));
         assertDoesNotThrow(() -> gameID = USER_SERVICE.createGame(new AuthRequest(authData.authToken()), new NewGameRequest("game1")));
