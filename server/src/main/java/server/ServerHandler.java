@@ -14,7 +14,16 @@ import service.UserService;
 import java.util.List;
 
 public class ServerHandler {
-    private static final DataAccess MY_DATA_ACCESS = new DataBaseDataAccess();
+    private static final DataAccess MY_DATA_ACCESS;
+
+    static {
+        try {
+            MY_DATA_ACCESS = new DataBaseDataAccess();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static final UserService USER_SERVICE = new UserService(MY_DATA_ACCESS);
     private static final AdminService ADMIN_SERVICE = new AdminService(MY_DATA_ACCESS);
     private static final Gson GSON = new Gson();

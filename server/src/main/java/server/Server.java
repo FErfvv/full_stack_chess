@@ -18,14 +18,6 @@ public class Server {
 
     private final Javalin javalin;
 
-    static {
-        try {
-            DatabaseManager.createDatabase();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.post("/user", Server::register);
