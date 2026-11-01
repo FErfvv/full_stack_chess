@@ -89,8 +89,11 @@ public class DataBaseDataAccess implements DataAccess {
             if (gameID != -1) {
                 gameData = new GameData(gameID + 1, null, null, gameName, new ChessGame());
                 String gameDataJson = new Gson().toJson(gameData);
-                preparedStatement = conn.prepareStatement(String.format("INSERT INTO gameList (json) VALUES ('%s')", gameDataJson));
-                preparedStatement.execute();
+                String statement = "INSERT INTO gameList (json) VALUES (?)";
+                try (var preStatement = conn.prepareStatement(statement)) {
+                    preStatement.setString(1, gameDataJson);
+                    preStatement.execute();
+                }
                 return gameData;
             }
         } catch (Exception e) {
@@ -139,8 +142,33 @@ public class DataBaseDataAccess implements DataAccess {
     }
 
     @Override
-    public void updateGame(JoinGameRequest joinGameRequest, UserData user) throws NoGameException, ColorTakenException, BadRequestException {
-        throw new NotImplementedError();
+    public void updateGame(JoinGameRequest joinGameRequest, UserData user) throws NoGameException, ColorTakenException, BadRequestException, DataAccessException {
+        GameData targetGame = getGame(joinGameRequest.gameID());
+
+        if (targetGame == null) {
+            throw new NoGameException();
+        }
+        boolean isBlack = joinGameRequest.playerColor().equals(ChessGame.TeamColor.BLACK.name());
+        boolean isWhite = joinGameRequest.playerColor().equals(ChessGame.TeamColor.WHITE.name());
+        if (!isBlack && !isWhite) {
+            throw new BadRequestException();
+        }
+        if (isBlack && targetGame.blackUsername() == null) {
+            targetGame.setBlackUsername(user.username());
+        } else if (isWhite && targetGame.whiteUsername() == null) {
+            targetGame.setWhiteUsername(user.username());
+        } else {
+            throw new ColorTakenException();
+        }
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement("UPDATE gameList SET json=? WHERE id=?")) {
+                preparedStatement.setString(1, new Gson().toJson(targetGame));
+                preparedStatement.setInt(2, targetGame.gameID());
+                preparedStatement.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to get a User: %s", e.toString()));
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import model.GameData;
 import model.UserData;
 import model.requests.*;
 import model.responses.GameListResponseData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,7 +25,8 @@ public class UserService {
         if (currentUser != null) {
             throw new UsernameAlreadyTakenException(currentUser.username());
         }
-        currentUser = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
+        String hashedPassword = BCrypt.hashpw(registerRequest.password(), BCrypt.gensalt());
+        currentUser = new UserData(registerRequest.username(), hashedPassword, registerRequest.email());
         myDataAccess.createUser(currentUser);
         AuthData myAuthData = new AuthData(currentUser.username(), generateToken());
         myDataAccess.createAuth(myAuthData);
@@ -36,7 +38,7 @@ public class UserService {
         if (currentUser == null) {
             throw new UnauthorizedException(String.format("Username '%s' does not exist", loginRequest.username()));
         }
-        if (!currentUser.password().equals(loginRequest.password())) {
+        if (!BCrypt.checkpw(loginRequest.password(), currentUser.password())) {
             throw new UnauthorizedException(String.format("Password '%s' is incorrect", loginRequest.username()));
         }
         AuthData myAuthData = new AuthData(currentUser.username(), generateToken());

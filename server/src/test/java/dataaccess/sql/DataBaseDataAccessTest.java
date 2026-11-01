@@ -57,7 +57,8 @@ class DataBaseDataAccessTest {
     }
 
     @Test
-    void updateGame() {
+    void updateGame() throws DataAccessException {
+        dbAccess.createGame("newGame");
         JoinGameRequest joinGameRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE.name(), "1");
         assertDoesNotThrow(() -> dbAccess.updateGame(joinGameRequest, new UserData(USERNAME, PASSWORD, "john@gmail.com")));
     }

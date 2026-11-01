@@ -36,7 +36,7 @@ public interface DataAccess {
     public List<GameListResponseData> listGames() throws DataAccessException;
 
     // This is used when players join a game or when a move is made.
-    public void updateGame(JoinGameRequest joinGameRequest, UserData userData) throws NoGameException, ColorTakenException, BadRequestException;
+    public void updateGame(JoinGameRequest joinGameRequest, UserData userData) throws NoGameException, ColorTakenException, BadRequestException, DataAccessException;
 
     // Create a new authorization.
     public void createAuth(AuthData authToken) throws DataAccessException;
