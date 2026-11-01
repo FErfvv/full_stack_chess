@@ -67,7 +67,12 @@ public class Server {
         ctx.status(200);
     }
 
-    private static void joinGame(Context ctx) throws ColorTakenException, UnauthorizedException, BadRequestException, NoGameException, DataAccessException {
+    private static void joinGame(Context ctx)
+            throws ColorTakenException,
+            UnauthorizedException,
+            BadRequestException,
+            NoGameException,
+            DataAccessException {
         ServerHandler.addUserToGame(Objects.requireNonNull(ctx.header("Authorization")), ctx.body());
         ctx.status(200);
     }

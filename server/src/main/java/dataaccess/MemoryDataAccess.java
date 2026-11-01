@@ -47,6 +47,11 @@ public class MemoryDataAccess implements DataAccess {
 
     @Override
     public GameData getGame(String gameID) {
+        for (GameData game : gameList) {
+            if (String.valueOf(game.gameID()).equals(gameID)) {
+                return game;
+            }
+        }
         return null;
     }
 
@@ -60,29 +65,9 @@ public class MemoryDataAccess implements DataAccess {
     }
 
     @Override
-    public void updateGame(JoinGameRequest joinGameRequest, UserData user) throws NoGameException, ColorTakenException, BadRequestException {
-        GameData targetGame = null;
-        for (GameData game : gameList) {
-            if (game.gameID() == Integer.parseInt(joinGameRequest.gameID())) {
-                targetGame = game;
-                break;
-            }
-        }
-        if (targetGame == null) {
-            throw new NoGameException();
-        }
-        boolean isBlack = joinGameRequest.playerColor().equals(ChessGame.TeamColor.BLACK.name());
-        boolean isWhite = joinGameRequest.playerColor().equals(ChessGame.TeamColor.WHITE.name());
-        if (!isBlack && !isWhite) {
-            throw new BadRequestException();
-        }
-        if (isBlack && targetGame.blackUsername() == null) {
-            targetGame.setBlackUsername(user.username());
-        } else if (isWhite && targetGame.whiteUsername() == null) {
-            targetGame.setWhiteUsername(user.username());
-        } else {
-            throw new ColorTakenException();
-        }
+    public void updateGame(GameData targetGame) throws NoGameException, ColorTakenException, BadRequestException {
+        GameData game = getGame(String.valueOf(targetGame.gameID()));
+        game = targetGame;
     }
 
     @Override

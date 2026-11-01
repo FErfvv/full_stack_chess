@@ -1,5 +1,6 @@
 package service;
 
+import chess.ChessGame;
 import dataaccess.DataAccess;
 import dataaccess.exceptions.*;
 import model.AuthData;
@@ -74,7 +75,23 @@ public class UserService {
             throw new UnauthorizedException("unauthorized");
         }
         UserData user = myDataAccess.getUser(username);
-        myDataAccess.updateGame(joinGameRequest, user);
+        GameData targetGame = myDataAccess.getGame(joinGameRequest.gameID());
+        if (targetGame == null) {
+            throw new NoGameException();
+        }
+        boolean isBlack = joinGameRequest.playerColor().equals(ChessGame.TeamColor.BLACK.name());
+        boolean isWhite = joinGameRequest.playerColor().equals(ChessGame.TeamColor.WHITE.name());
+        if (!isBlack && !isWhite) {
+            throw new BadRequestException();
+        }
+        if (isBlack && targetGame.blackUsername() == null) {
+            targetGame.setBlackUsername(user.username());
+        } else if (isWhite && targetGame.whiteUsername() == null) {
+            targetGame.setWhiteUsername(user.username());
+        } else {
+            throw new ColorTakenException();
+        }
+        myDataAccess.updateGame(targetGame);
     }
 
     private static String generateToken() {

@@ -131,7 +131,10 @@ public class DataBaseDataAccess implements DataAccess {
                 try (var response = preparedStatement.executeQuery()) {
                     while (response.next()) {
                         GameData gameData = new Gson().fromJson(response.getString("json"), GameData.class);
-                        responseData.add(new GameListResponseData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName()));
+                        responseData.add(new GameListResponseData(gameData.gameID(),
+                                gameData.whiteUsername(),
+                                gameData.blackUsername(),
+                                gameData.gameName()));
                     }
                 }
             }
@@ -142,24 +145,7 @@ public class DataBaseDataAccess implements DataAccess {
     }
 
     @Override
-    public void updateGame(JoinGameRequest joinGameRequest, UserData user) throws NoGameException, ColorTakenException, BadRequestException, DataAccessException {
-        GameData targetGame = getGame(joinGameRequest.gameID());
-
-        if (targetGame == null) {
-            throw new NoGameException();
-        }
-        boolean isBlack = joinGameRequest.playerColor().equals(ChessGame.TeamColor.BLACK.name());
-        boolean isWhite = joinGameRequest.playerColor().equals(ChessGame.TeamColor.WHITE.name());
-        if (!isBlack && !isWhite) {
-            throw new BadRequestException();
-        }
-        if (isBlack && targetGame.blackUsername() == null) {
-            targetGame.setBlackUsername(user.username());
-        } else if (isWhite && targetGame.whiteUsername() == null) {
-            targetGame.setWhiteUsername(user.username());
-        } else {
-            throw new ColorTakenException();
-        }
+    public void updateGame(GameData targetGame) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
             try (var preparedStatement = conn.prepareStatement("UPDATE gameList SET json=? WHERE id=?")) {
                 preparedStatement.setString(1, new Gson().toJson(targetGame));

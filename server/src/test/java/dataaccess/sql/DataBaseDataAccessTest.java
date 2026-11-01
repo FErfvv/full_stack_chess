@@ -3,6 +3,7 @@ package dataaccess.sql;
 import chess.ChessGame;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import model.requests.JoinGameRequest;
 import org.junit.jupiter.api.*;
@@ -60,22 +61,26 @@ class DataBaseDataAccessTest {
     void updateGame() throws DataAccessException {
         dbAccess.createGame("newGame");
         JoinGameRequest joinGameRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE.name(), "1");
-        assertDoesNotThrow(() -> dbAccess.updateGame(joinGameRequest, new UserData(USERNAME, PASSWORD, "john@gmail.com")));
+        GameData gameData = dbAccess.getGame(joinGameRequest.gameID());
+        assertDoesNotThrow(() -> dbAccess.updateGame(gameData));
     }
 
     @Test
+    @Order(3)
     void createAuth() {
         assertDoesNotThrow(() -> dbAccess.createAuth(new AuthData("authTest", "CreatAuth")));
     }
 
     @Test
+    @Order(4)
     void getAuth() {
-        assertDoesNotThrow(() -> dbAccess.getAuth("authToken"));
+        assertDoesNotThrow(() -> dbAccess.getAuth("CreateAuth"));
     }
 
     @Test
+    @Order(5)
     void deleteAuth() {
-        assertDoesNotThrow(() -> dbAccess.deleteAuth(new AuthData(USERNAME, "authToken")));
+        assertDoesNotThrow(() -> dbAccess.deleteAuth(new AuthData(USERNAME, "CreateAuth")));
     }
 
     @AfterAll
