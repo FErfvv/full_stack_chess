@@ -43,16 +43,19 @@ class DataBaseDataAccessTest {
     }
 
     @Test
+    @Order(6)
     void createGame() {
         assertDoesNotThrow(() -> dbAccess.createGame("BestGameEver"));
     }
 
     @Test
+    @Order(8)
     void getGame() {
         assertDoesNotThrow(() -> dbAccess.getGame("1"));
     }
 
     @Test
+    @Order(7)
     void listGames() {
         assertDoesNotThrow(() -> dbAccess.listGames());
     }
