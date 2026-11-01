@@ -1,12 +1,10 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.DatabaseManager;
 import dataaccess.exceptions.*;
 import io.javalin.*;
 import io.javalin.http.Context;
 import model.AuthData;
-import model.GameData;
 import model.responses.GameListResponseData;
 
 import java.util.List;

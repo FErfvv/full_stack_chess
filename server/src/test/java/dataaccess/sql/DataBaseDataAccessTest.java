@@ -1,12 +1,11 @@
 package dataaccess.sql;
 
-import dataaccess.DataBaseDataAccess;
-import dataaccess.DatabaseManager;
+import chess.ChessGame;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
 import model.UserData;
+import model.requests.JoinGameRequest;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -49,14 +48,18 @@ class DataBaseDataAccessTest {
 
     @Test
     void getGame() {
+        assertDoesNotThrow(() -> dbAccess.getGame("1"));
     }
 
     @Test
     void listGames() {
+        assertDoesNotThrow(() -> dbAccess.listGames());
     }
 
     @Test
     void updateGame() {
+        JoinGameRequest joinGameRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE.name(), "1");
+        assertDoesNotThrow(() -> dbAccess.updateGame(joinGameRequest, new UserData(USERNAME, PASSWORD, "john@gmail.com")));
     }
 
     @Test
@@ -66,10 +69,12 @@ class DataBaseDataAccessTest {
 
     @Test
     void getAuth() {
+        assertDoesNotThrow(() -> dbAccess.getAuth("authToken"));
     }
 
     @Test
     void deleteAuth() {
+        assertDoesNotThrow(() -> dbAccess.deleteAuth(new AuthData(USERNAME, "authToken")));
     }
 
     @AfterAll

@@ -1,7 +1,8 @@
-package dataaccess;
+package dataaccess.sql;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import dataaccess.DataAccess;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.ColorTakenException;
 import dataaccess.exceptions.DataAccessException;
@@ -149,8 +150,16 @@ public class DataBaseDataAccess implements DataAccess {
     }
 
     @Override
-    public boolean deleteAuth(AuthData authData) {
-        throw new NotImplementedError();
+    public boolean deleteAuth(AuthData authData) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM authData WHERE authToken=?")) {
+                preparedStatement.setString(1, authData.authToken());
+                preparedStatement.executeUpdate();
+                return true;
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to get a User: %s", e.toString()));
+        }
     }
 
 

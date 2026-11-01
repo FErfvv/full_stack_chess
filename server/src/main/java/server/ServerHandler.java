@@ -2,8 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
-import dataaccess.DataBaseDataAccess;
-import dataaccess.MemoryDataAccess;
+import dataaccess.sql.DataBaseDataAccess;
 import dataaccess.exceptions.*;
 import model.AuthData;
 import model.requests.*;
