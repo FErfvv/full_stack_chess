@@ -71,7 +71,7 @@ class DataBaseDataAccessTest {
     @Test
     @Order(3)
     void createAuth() {
-        assertDoesNotThrow(() -> dbAccess.createAuth(new AuthData("authTest", "CreatAuth")));
+        assertDoesNotThrow(() -> dbAccess.createAuth(new AuthData("authTest", "CreateAuth")));
     }
 
     @Test
