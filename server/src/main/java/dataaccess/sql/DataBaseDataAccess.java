@@ -16,6 +16,7 @@ import model.responses.GameListResponseData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseDataAccess implements DataAccess {
@@ -99,13 +100,42 @@ public class DataBaseDataAccess implements DataAccess {
     }
 
     @Override
-    public GameData getGame(String gameID) {
-        throw new NotImplementedError();
+    public GameData getGame(String gameID) throws DataAccessException {
+        String statement = "SELECT json FROM gameList WHERE id=?";
+        GameData game = null;
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, gameID);
+                try (var response = preparedStatement.executeQuery()) {
+                    while (response.next()) {
+                        game = new Gson().fromJson(response.getString("json"), GameData.class);
+
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to get a User: %s", e.toString()));
+        }
+        return game;
     }
 
     @Override
-    public List<GameListResponseData> listGames() {
-        throw new NotImplementedError();
+    public List<GameListResponseData> listGames() throws DataAccessException {
+        String statement = "SELECT json FROM gameList";
+        List<GameListResponseData> responseData = new ArrayList<>();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                try (var response = preparedStatement.executeQuery()) {
+                    while (response.next()) {
+                        GameData gameData = new Gson().fromJson(response.getString("json"), GameData.class);
+                        responseData.add(new GameListResponseData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName()));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to get a User: %s", e.toString()));
+        }
+        return responseData;
     }
 
     @Override

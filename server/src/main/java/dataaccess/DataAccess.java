@@ -30,10 +30,10 @@ public interface DataAccess {
     public GameData createGame(String gameName) throws DataAccessException;
 
     // Retrieve a specified game with the given game ID.
-    public GameData getGame(String gameID);
+    public GameData getGame(String gameID) throws DataAccessException;
 
     // Retrieve all games.
-    public List<GameListResponseData> listGames();
+    public List<GameListResponseData> listGames() throws DataAccessException;
 
     // This is used when players join a game or when a move is made.
     public void updateGame(JoinGameRequest joinGameRequest, UserData userData) throws NoGameException, ColorTakenException, BadRequestException;
