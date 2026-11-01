@@ -36,7 +36,7 @@ public class ServerHandler {
         return USER_SERVICE.login((LoginRequest) checkRequest(LoginRequest.class, loginData));
     }
 
-    public static void clearDb() {
+    public static void clearDb() throws DataAccessException {
         ADMIN_SERVICE.clearDb();
     }
 
@@ -47,7 +47,7 @@ public class ServerHandler {
         USER_SERVICE.logout(new AuthRequest(authToken));
     }
 
-    public static int createGame(String authToken, String gameName) throws BadRequestException, UnauthorizedException {
+    public static int createGame(String authToken, String gameName) throws BadRequestException, UnauthorizedException, DataAccessException {
         if (authToken.isEmpty()) {
             throw new BadRequestException();
         }

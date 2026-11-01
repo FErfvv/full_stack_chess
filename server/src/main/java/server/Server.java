@@ -57,7 +57,7 @@ public class Server {
         ctx.status(200);
     }
 
-    private static void createGame(Context ctx) throws UnauthorizedException, BadRequestException {
+    private static void createGame(Context ctx) throws UnauthorizedException, BadRequestException, DataAccessException {
         int gameId = ServerHandler.createGame(Objects.requireNonNull(ctx.header("Authorization")), ctx.body());
         ctx.result(new Gson().toJson(Map.of("gameID", gameId)));
         ctx.status(200);
@@ -74,7 +74,7 @@ public class Server {
         ctx.status(200);
     }
 
-    private static void clear(Context ctx) {
+    private static void clear(Context ctx) throws DataAccessException {
         ServerHandler.clearDb();
         ctx.status(200);
     }

@@ -54,7 +54,7 @@ public class UserService {
         }
     }
 
-    public int createGame(AuthRequest authRequest, NewGameRequest gameRequest) throws UnauthorizedException {
+    public int createGame(AuthRequest authRequest, NewGameRequest gameRequest) throws UnauthorizedException, DataAccessException {
         if (myDataAccess.getAuth(authRequest.authToken()) == null) {
             throw new UnauthorizedException("unauthorized");
         }

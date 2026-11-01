@@ -74,7 +74,7 @@ class UserServiceTest {
 
     @Test
     @Order(7)
-    void listGames() throws UnauthorizedException {
+    void listGames() throws UnauthorizedException, DataAccessException {
         List<GameListResponseData> expectedGameList = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             expectedGameList.add(new GameListResponseData(i, null, null, String.format("game%s", i)));

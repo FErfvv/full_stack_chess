@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DataBaseDataAccessTest {
-    private DataBaseDataAccess dbAccess;
+    private static DataBaseDataAccess dbAccess;
     private static AuthData authData;
     private static final String USERNAME = "john";
     private static final String PASSWORD = "password";
@@ -27,6 +27,7 @@ class DataBaseDataAccessTest {
 
     @Test
     void clear() {
+        assertDoesNotThrow(() -> dbAccess.clear());
     }
 
     @Test
@@ -43,6 +44,7 @@ class DataBaseDataAccessTest {
 
     @Test
     void createGame() {
+        assertDoesNotThrow(() -> dbAccess.createGame("BestGameEver"));
     }
 
     @Test
@@ -59,6 +61,7 @@ class DataBaseDataAccessTest {
 
     @Test
     void createAuth() {
+        assertDoesNotThrow(() -> dbAccess.createAuth(new AuthData("authTest", "CreatAuth")));
     }
 
     @Test
@@ -67,5 +70,10 @@ class DataBaseDataAccessTest {
 
     @Test
     void deleteAuth() {
+    }
+
+    @AfterAll
+    static void afterAll() throws DataAccessException {
+        dbAccess.clear();
     }
 }

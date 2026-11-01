@@ -18,7 +18,7 @@ import java.util.List;
 public interface DataAccess {
 
     // A method for clearing all data from the database. This is used during testing.
-    public void clear();
+    public void clear() throws DataAccessException;
 
     // Create a new user.
     public void createUser(UserData currentUser) throws DataAccessException;
@@ -27,7 +27,7 @@ public interface DataAccess {
     public UserData getUser(String username) throws DataAccessException;
 
     // Create a new game.
-    public GameData createGame(String gameName);
+    public GameData createGame(String gameName) throws DataAccessException;
 
     // Retrieve a specified game with the given game ID.
     public GameData getGame(String gameID);

@@ -23,8 +23,20 @@ public class DataBaseDataAccess implements DataAccess {
         configureDatabase();
     }
 
-    public void clear() {
-        throw new NotImplementedError();
+    public void clear() throws DataAccessException {
+        String[] statementList = {"TRUNCATE users", "TRUNCATE authData", "TRUNCATE gameList"};
+
+        try (Connection conn = DatabaseManager.getConnection()) {
+            for (String statement : statementList) {
+                try (var preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to create a User: %s", e.toString()));
+        }
+
+
     }
 
     @Override
@@ -63,8 +75,26 @@ public class DataBaseDataAccess implements DataAccess {
     }
 
     @Override
-    public GameData createGame(String gameName) {
-        throw new NotImplementedError();
+    public GameData createGame(String gameName) throws DataAccessException {
+        GameData gameData;
+        int gameID = -1;
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var preparedStatement = conn.prepareStatement("SELECT COUNT(*) FROM gameList");
+            var response = preparedStatement.executeQuery();
+            while (response.next()) {
+                gameID = response.getInt(1);
+            }
+            if (gameID != -1) {
+                gameData = new GameData(gameID + 1, null, null, gameName, new ChessGame());
+                String gameDataJson = new Gson().toJson(gameData);
+                preparedStatement = conn.prepareStatement(String.format("INSERT INTO gameList (json) VALUES ('%s')", gameDataJson));
+                preparedStatement.execute();
+                return gameData;
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to get a User: %s", e.toString()));
+        }
+        return null;
     }
 
     @Override

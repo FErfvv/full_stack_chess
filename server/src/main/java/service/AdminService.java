@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.DataAccess;
+import dataaccess.exceptions.DataAccessException;
 
 public class AdminService {
     private final DataAccess myDataAccess;
@@ -9,7 +10,7 @@ public class AdminService {
         this.myDataAccess = myDataAccess;
     }
 
-    public void clearDb() {
+    public void clearDb() throws DataAccessException {
         myDataAccess.clear();
     }
 }
