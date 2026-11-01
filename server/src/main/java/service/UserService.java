@@ -79,7 +79,7 @@ public class UserService {
         return UUID.randomUUID().toString();
     }
 
-    public List<GameListResponseData> listGames(AuthRequest authRequest) throws UnauthorizedException {
+    public List<GameListResponseData> listGames(AuthRequest authRequest) throws UnauthorizedException, DataAccessException {
         if (myDataAccess.getAuth(authRequest.authToken()) == null) {
             throw new UnauthorizedException("unauthorized");
         }

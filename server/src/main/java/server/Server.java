@@ -63,7 +63,7 @@ public class Server {
         ctx.status(200);
     }
 
-    private static void listGames(Context ctx) throws UnauthorizedException, BadRequestException {
+    private static void listGames(Context ctx) throws UnauthorizedException, BadRequestException, DataAccessException {
         List<GameListResponseData> gameDataList = ServerHandler.listGames(Objects.requireNonNull(ctx.header("Authorization")));
         ctx.result(new Gson().toJson(Map.of("games", gameDataList)));
         ctx.status(200);

@@ -128,8 +128,24 @@ public class DataBaseDataAccess implements DataAccess {
     }
 
     @Override
-    public String getAuth(String authToken) {
-        throw new NotImplementedError();
+    public String getAuth(String authToken) throws DataAccessException {
+
+        String statement = "SELECT json FROM authData WHERE authToken=?";
+        String username = null;
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, authToken);
+                try (var response = preparedStatement.executeQuery()) {
+                    while (response.next()) {
+                        AuthData authData = new Gson().fromJson(response.getString("json"), AuthData.class);
+                        username = authData.username();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Error while trying to get a User: %s", e.toString()));
+        }
+        return username;
     }
 
     @Override

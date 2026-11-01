@@ -54,7 +54,7 @@ public class ServerHandler {
         return USER_SERVICE.createGame(new AuthRequest(authToken), (NewGameRequest) checkRequest(NewGameRequest.class, gameName));
     }
 
-    public static List<GameListResponseData> listGames(String authToken) throws BadRequestException, UnauthorizedException {
+    public static List<GameListResponseData> listGames(String authToken) throws BadRequestException, UnauthorizedException, DataAccessException {
         if (authToken.isEmpty()) {
             throw new BadRequestException();
         }

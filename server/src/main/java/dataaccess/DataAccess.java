@@ -42,7 +42,7 @@ public interface DataAccess {
     public void createAuth(AuthData authToken) throws DataAccessException;
 
     // Retrieve an authorization given an authToken.
-    public String getAuth(String authToken);
+    public String getAuth(String authToken) throws DataAccessException;
 
     // Delete an authorization so that it is no longer valid.
     public boolean deleteAuth(AuthData authData);
