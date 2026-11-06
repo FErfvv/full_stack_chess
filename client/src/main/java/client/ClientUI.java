@@ -23,6 +23,7 @@ public class ClientUI {
             String[] tokens = input.toLowerCase().split(" ");
             String cmd = (tokens.length > 0) ? tokens[0] : "help";
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+
             if (Objects.equals(cmd, "help")) {
                 help();
             } else if (state == State.SIGNEDOUT) {
@@ -42,6 +43,10 @@ public class ClientUI {
     }
 
     private void help() {
-        System.out.printf(ClientGuiMap.LoggedOutHelp());
+        if (state == State.SIGNEDOUT) {
+            System.out.println(ClientGuiMap.LoggedOutHelp());
+        } else {
+            System.out.println(ClientGuiMap.LoggedInHelp());
+        }
     }
 }
