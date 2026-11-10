@@ -100,6 +100,10 @@ public class ClientUI {
                     ListGamesResponse gameList = commandHandler.listGames();
                     System.out.println(ClientGuiMap.GameList(gameList));
                     break;
+                case "join":
+                    commandHandler.listGames();
+                    System.out.println(ClientGuiMap.GameList(gameList));
+                    break;
                 case "create":
                     commandHandler.createGame(params);
                     break;

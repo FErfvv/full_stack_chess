@@ -7,10 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import exceptions.BasicResponseException;
 import jdk.jshell.spi.ExecutionControl;
 import model.AuthData;
-import model.requests.AuthRequest;
-import model.requests.LoginRequest;
-import model.requests.NewGameRequest;
-import model.requests.RegisterRequest;
+import model.requests.*;
 import model.responses.GameListResponseData;
 import model.responses.ListGamesResponse;
 
@@ -59,10 +56,6 @@ public class ServerFacade {
         handleResponse(response, null, null);
     }
 
-    public void quit() throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Not yet implemented");
-    }
-
     public int createGame(String[] params) throws BasicResponseException {
         HttpRequest request = buildRequest(
                 "POST",
@@ -83,8 +76,14 @@ public class ServerFacade {
         return handleResponse(response, ListGamesResponse.class, null);
     }
 
-    public void playGame() throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Not yet implemented");
+    public void joinGame(String[] params) throws BasicResponseException {
+        HttpRequest request = buildRequest(
+                "PUT",
+                "/game",
+                authData.authToken(),
+                new JoinGameRequest(params[0], params[2]));
+        HttpResponse<String> response = sendRequest(request);
+        handleResponse(response, null, null);
     }
 
     public void observeGame() throws ExecutionControl.NotImplementedException {

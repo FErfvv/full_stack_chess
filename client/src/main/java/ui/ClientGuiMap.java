@@ -1,5 +1,8 @@
 package ui;
 
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
 import model.responses.GameListResponseData;
 import model.responses.ListGamesResponse;
 
@@ -75,6 +78,39 @@ public class ClientGuiMap {
             myString.append(gameString);
         }
         return myString.toString();
+    }
+
+    public static String renderGame(ChessGame game, ChessGame.TeamColor team) {
+        ChessPiece[][] board = game.getBoard().getMyBoard();
+        String[][][] boardRenderInfo = new String[10][10][3];
+        for (int rowCoor = 0; rowCoor < boardRenderInfo.length; rowCoor++) {
+            for (int colCoor = 0; colCoor < boardRenderInfo[rowCoor].length; colCoor++) {
+                if (rowCoor == 0 || rowCoor == 9) {
+                    boardRenderInfo[rowCoor][colCoor][0] = getCharFromNumber(colCoor);
+                    boardRenderInfo[rowCoor][colCoor][1] = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
+                    boardRenderInfo[rowCoor][colCoor][2] = EscapeSequences.SET_TEXT_COLOR_BLACK;
+                } else if (colCoor == 0 || colCoor == 9) {
+                    boardRenderInfo[rowCoor][colCoor][0] = getNumber(colCoor);
+                    boardRenderInfo[rowCoor][colCoor][1] = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
+                    boardRenderInfo[rowCoor][colCoor][2] = EscapeSequences.SET_TEXT_COLOR_BLACK;
+                } else {
+
+                    boardRenderInfo[rowCoor][colCoor][1] = (rowCoor + colCoor) % 2 == 0 ? EscapeSequences.SET_BG_COLOR_WHITE : EscapeSequences.SET_BG_COLOR_BLACK;
+
+                }
+
+
+
+            }
+        }
+    }
+
+    private static String getCharFromNumber(int i) {
+        return i > 0 && i < 9 ? String.valueOf((char) (i + 64)) : null;
+    }
+
+    private static String getNumber(int i) {
+        return i > 0 && i < 9 ? Integer.toString(i) : null;
     }
 
 }

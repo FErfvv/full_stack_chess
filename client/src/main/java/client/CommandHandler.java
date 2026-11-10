@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import exceptions.BasicResponseException;
 import model.AuthData;
@@ -14,6 +15,9 @@ import java.net.http.HttpResponse;
 public class CommandHandler {
     private static ServerFacade facade;
     private static String serverUrl;
+    private ListGamesResponse gameList;
+    private int gameID;
+    private ChessGame currentGame;
 
     public CommandHandler(String url) {
         serverUrl = url;
@@ -33,12 +37,18 @@ public class CommandHandler {
     }
 
     public void createGame(String[] params) throws BasicResponseException {
-        int gameID = facade.createGame(params);
-        System.out.println(gameID);
+        gameID = facade.createGame(params);
     }
 
     public ListGamesResponse listGames() throws BasicResponseException {
-        return facade.listGames();
+        gameList = facade.listGames();
+        return gameList;
+    }
+
+    public ChessGame joinGame(String[] params) throws BasicResponseException {
+        facade.joinGame(params);
+        currentGame = new ChessGame();
+        return currentGame;
     }
 
 
