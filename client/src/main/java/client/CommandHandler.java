@@ -5,6 +5,7 @@ import exceptions.BasicResponseException;
 import model.AuthData;
 import model.requests.AuthRequest;
 import model.requests.RegisterRequest;
+import model.responses.ListGamesResponse;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -34,6 +35,10 @@ public class CommandHandler {
     public void createGame(String[] params) throws BasicResponseException {
         int gameID = facade.createGame(params);
         System.out.println(gameID);
+    }
+
+    public ListGamesResponse listGames() throws BasicResponseException {
+        return facade.listGames();
     }
 
 

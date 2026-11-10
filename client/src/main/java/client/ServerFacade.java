@@ -3,6 +3,7 @@ package client;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import exceptions.BasicResponseException;
 import jdk.jshell.spi.ExecutionControl;
 import model.AuthData;
@@ -10,10 +11,13 @@ import model.requests.AuthRequest;
 import model.requests.LoginRequest;
 import model.requests.NewGameRequest;
 import model.requests.RegisterRequest;
+import model.responses.GameListResponseData;
+import model.responses.ListGamesResponse;
 
 import java.net.*;
 import java.net.http.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ServerFacade {
     private final HttpClient client = HttpClient.newHttpClient();
@@ -69,8 +73,14 @@ public class ServerFacade {
         return Integer.parseInt((String) handleResponse(response, ArrayList.class, new String[]{"gameID"}).getFirst());
     }
 
-    public void listGames() throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Not yet implemented");
+    public ListGamesResponse listGames() throws BasicResponseException {
+        HttpRequest request = buildRequest(
+                "GET",
+                "/game",
+                authData.authToken(),
+                null);
+        HttpResponse<String> response = sendRequest(request);
+        return handleResponse(response, ListGamesResponse.class, null);
     }
 
     public void playGame() throws ExecutionControl.NotImplementedException {

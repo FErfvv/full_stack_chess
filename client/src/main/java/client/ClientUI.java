@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import exceptions.BasicResponseException;
 import model.AuthData;
 import model.ErrorResponseMessage;
+import model.responses.ListGamesResponse;
 import ui.ClientGuiMap;
 import ui.EscapeSequences;
 
@@ -94,6 +95,10 @@ public class ClientUI {
                 case "logout":
                     commandHandler.logout();
                     state = State.SIGNEDOUT;
+                    break;
+                case "list":
+                    ListGamesResponse gameList = commandHandler.listGames();
+                    System.out.println(ClientGuiMap.GameList(gameList));
                     break;
                 case "create":
                     commandHandler.createGame(params);
