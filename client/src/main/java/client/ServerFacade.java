@@ -76,12 +76,13 @@ public class ServerFacade {
         return handleResponse(response, ListGamesResponse.class, null);
     }
 
-    public void joinGame(String[] params) throws BasicResponseException {
+    public void joinGame(String playerColor, String gameID) throws BasicResponseException {
         HttpRequest request = buildRequest(
                 "PUT",
                 "/game",
                 authData.authToken(),
-                new JoinGameRequest(params[0], params[2]));
+                new JoinGameRequest(playerColor, gameID));
+
         HttpResponse<String> response = sendRequest(request);
         handleResponse(response, null, null);
     }

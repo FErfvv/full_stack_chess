@@ -6,6 +6,7 @@ import exceptions.BasicResponseException;
 import model.AuthData;
 import model.requests.AuthRequest;
 import model.requests.RegisterRequest;
+import model.responses.GameListResponseData;
 import model.responses.ListGamesResponse;
 
 import java.net.URI;
@@ -46,7 +47,12 @@ public class CommandHandler {
     }
 
     public ChessGame joinGame(String[] params) throws BasicResponseException {
-        facade.joinGame(params);
+        int gameId = Integer.parseInt(params[0]);
+        if (gameList != null && gameList.getGames().size() > gameId) {
+            gameId = gameList.getGames().get(gameId).gameID();
+        }
+        String playerColor = params[1].toUpperCase();
+        facade.joinGame(playerColor, Integer.toString(gameId));
         currentGame = new ChessGame();
         return currentGame;
     }

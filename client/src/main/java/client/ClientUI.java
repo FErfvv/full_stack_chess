@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import exceptions.BasicResponseException;
 import model.AuthData;
@@ -101,8 +102,8 @@ public class ClientUI {
                     System.out.println(ClientGuiMap.GameList(gameList));
                     break;
                 case "join":
-                    commandHandler.listGames();
-                    System.out.println(ClientGuiMap.GameList(gameList));
+                    ChessGame game = commandHandler.joinGame(params);
+                    System.out.println(ClientGuiMap.renderGame(game, ChessGame.TeamColor.WHITE));
                     break;
                 case "create":
                     commandHandler.createGame(params);

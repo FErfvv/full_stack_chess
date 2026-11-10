@@ -6,6 +6,8 @@ import chess.ChessPiece;
 import model.responses.GameListResponseData;
 import model.responses.ListGamesResponse;
 
+import static chess.ChessPiece.PieceType.*;
+
 public class ClientGuiMap {
 
 
@@ -83,6 +85,7 @@ public class ClientGuiMap {
     public static String renderGame(ChessGame game, ChessGame.TeamColor team) {
         ChessPiece[][] board = game.getBoard().getMyBoard();
         String[][][] boardRenderInfo = new String[10][10][3];
+        StringBuilder renderedBoard = new StringBuilder();
         for (int rowCoor = 0; rowCoor < boardRenderInfo.length; rowCoor++) {
             for (int colCoor = 0; colCoor < boardRenderInfo[rowCoor].length; colCoor++) {
                 if (rowCoor == 0 || rowCoor == 9) {
@@ -94,14 +97,48 @@ public class ClientGuiMap {
                     boardRenderInfo[rowCoor][colCoor][1] = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
                     boardRenderInfo[rowCoor][colCoor][2] = EscapeSequences.SET_TEXT_COLOR_BLACK;
                 } else {
-
+                    addPiecesToRender(boardRenderInfo, board, rowCoor, colCoor);
                     boardRenderInfo[rowCoor][colCoor][1] = (rowCoor + colCoor) % 2 == 0 ? EscapeSequences.SET_BG_COLOR_WHITE : EscapeSequences.SET_BG_COLOR_BLACK;
-
                 }
-
-
-
+                renderedBoard.append(renderCell(boardRenderInfo[rowCoor][colCoor]));
             }
+            renderedBoard.append("\n");
+        }
+        return renderedBoard.toString();
+    }
+
+    private static String renderCell(String[] info) {
+        return info[1] + info[2] + " " + info[0] + " " + EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR;
+    }
+
+    private static void addPiecesToRender(String[][][] boardRenderInfo, ChessPiece[][] myBoard, int row, int col) {
+        if (myBoard[row - 1][col - 1] == null) {
+            boardRenderInfo[row][col][0] = "";
+        } else {
+            switch (myBoard[row - 1][col - 1].getPieceType()) {
+                case PAWN:
+                    boardRenderInfo[row][col][0] = "P";
+                    break;
+                case ROOK:
+                    boardRenderInfo[row][col][0] = "R";
+                    break;
+                case KNIGHT:
+                    boardRenderInfo[row][col][0] = "N";
+                    break;
+                case BISHOP:
+                    boardRenderInfo[row][col][0] = "B";
+                    break;
+                case KING:
+                    boardRenderInfo[row][col][0] = "K";
+                    break;
+                case QUEEN:
+                    boardRenderInfo[row][col][0] = "Q";
+                    break;
+            }
+            boardRenderInfo[row][col][2] =
+                    myBoard[row - 1][col - 1].getTeamColor() == ChessGame.TeamColor.WHITE ?
+                            EscapeSequences.SET_TEXT_COLOR_BLUE :
+                            EscapeSequences.SET_TEXT_COLOR_RED;
         }
     }
 
