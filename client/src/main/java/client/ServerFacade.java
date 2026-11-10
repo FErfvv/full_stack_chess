@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import exceptions.BasicResponseException;
 import jdk.jshell.spi.ExecutionControl;
 import model.AuthData;
+import model.requests.LoginRequest;
 import model.requests.RegisterRequest;
 
 import java.net.*;
@@ -19,7 +20,7 @@ public class ServerFacade {
         authData = null;
     }
 
-    public AuthData register(String[] params) throws BasicResponseException {
+    public void register(String[] params) throws BasicResponseException {
         HttpRequest request = buildRequest(
                 "POST",
                 "/user",
@@ -27,11 +28,16 @@ public class ServerFacade {
                 new RegisterRequest(params[0], params[1], params[2]));
         HttpResponse<String> response = sendRequest(request);
         authData = handleResponse(response, AuthData.class);
-        return authData;
     }
 
-    public void login() throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Not yet implemented");
+    public void login(String[] params) throws BasicResponseException {
+        HttpRequest request = buildRequest(
+                "POST",
+                "/session",
+                null,
+                new LoginRequest(params[0], params[1]));
+        HttpResponse<String> response = sendRequest(request);
+        authData = handleResponse(response, AuthData.class);
     }
 
     public void logout() throws ExecutionControl.NotImplementedException {

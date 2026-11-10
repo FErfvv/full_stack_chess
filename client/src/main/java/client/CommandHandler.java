@@ -23,5 +23,9 @@ public class CommandHandler {
         facade.register(params);
     }
 
+    public void login(String[] params) throws BasicResponseException {
+        facade.login(params);
+    }
+
 
 }

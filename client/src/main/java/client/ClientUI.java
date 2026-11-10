@@ -67,6 +67,11 @@ public class ClientUI {
                     System.out.println("Successfully registered! Welcome " + params[0]);
                     state = State.SIGNEDIN;
                     break;
+                case "login":
+                    commandHandler.login(params);
+                    System.out.println("Successfully logged in! Welcome " + params[0]);
+                    state = State.SIGNEDIN;
+                    break;
                 case "quit":
                     System.out.println("Thank you for playing! Come again soon.");
                     state = State.QUIT;
