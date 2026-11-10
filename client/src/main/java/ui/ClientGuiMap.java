@@ -6,6 +6,8 @@ import chess.ChessPiece;
 import model.responses.GameListResponseData;
 import model.responses.ListGamesResponse;
 
+import java.util.Objects;
+
 import static chess.ChessPiece.PieceType.*;
 
 public class ClientGuiMap {
@@ -108,7 +110,10 @@ public class ClientGuiMap {
     }
 
     private static String renderCell(String[] info) {
-        return info[1] + info[2] + " " + info[0] + " " + EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR;
+        String cell = info[1] + info[2] + " ";
+        cell += !Objects.equals(info[0], "") ? info[0] : " ";
+        cell += " " + EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR;
+        return cell;
     }
 
     private static void addPiecesToRender(String[][][] boardRenderInfo, ChessPiece[][] myBoard, int row, int col) {
