@@ -1,15 +1,19 @@
 package client;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import exceptions.BasicResponseException;
 import jdk.jshell.spi.ExecutionControl;
 import model.AuthData;
 import model.requests.AuthRequest;
 import model.requests.LoginRequest;
+import model.requests.NewGameRequest;
 import model.requests.RegisterRequest;
 
 import java.net.*;
 import java.net.http.*;
+import java.util.ArrayList;
 
 public class ServerFacade {
     private final HttpClient client = HttpClient.newHttpClient();
@@ -28,7 +32,7 @@ public class ServerFacade {
                 null,
                 new RegisterRequest(params[0], params[1], params[2]));
         HttpResponse<String> response = sendRequest(request);
-        authData = handleResponse(response, AuthData.class);
+        authData = handleResponse(response, AuthData.class, null);
     }
 
     public void login(String[] params) throws BasicResponseException {
@@ -38,7 +42,7 @@ public class ServerFacade {
                 null,
                 new LoginRequest(params[0], params[1]));
         HttpResponse<String> response = sendRequest(request);
-        authData = handleResponse(response, AuthData.class);
+        authData = handleResponse(response, AuthData.class, null);
     }
 
     public void logout() throws BasicResponseException {
@@ -48,15 +52,21 @@ public class ServerFacade {
                 authData.authToken(),
                 null);
         HttpResponse<String> response = sendRequest(request);
-        handleResponse(response, null);
+        handleResponse(response, null, null);
     }
 
     public void quit() throws ExecutionControl.NotImplementedException {
         throw new ExecutionControl.NotImplementedException("Not yet implemented");
     }
 
-    public void createGame() throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Not yet implemented");
+    public int createGame(String[] params) throws BasicResponseException {
+        HttpRequest request = buildRequest(
+                "POST",
+                "/game",
+                authData.authToken(),
+                new NewGameRequest(params[0]));
+        HttpResponse<String> response = sendRequest(request);
+        return Integer.parseInt((String) handleResponse(response, ArrayList.class, new String[]{"gameID"}).getFirst());
     }
 
     public void listGames() throws ExecutionControl.NotImplementedException {
@@ -100,7 +110,7 @@ public class ServerFacade {
         }
     }
 
-    public <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws BasicResponseException {
+    public <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass, String[] itemsToExtract) throws BasicResponseException {
         if (!isSuccessful(response.statusCode())) {
             if (response.body() != null) {
                 throw new BasicResponseException(response.body(), response.statusCode());
@@ -108,7 +118,14 @@ public class ServerFacade {
             throw new BasicResponseException("Error in receiving request", response.statusCode());
         }
 
-        if (response.body() != null && responseClass != null) {
+        if (itemsToExtract != null && responseClass == ArrayList.class) {
+            ArrayList<String> values = new ArrayList<>();
+            for (String item : itemsToExtract) {
+                JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+                values.add(jsonObject.get(item).getAsString());
+            }
+            return (T) values;
+        } else if (response.body() != null && responseClass != null) {
             return new Gson().fromJson(response.body(), responseClass);
         }
         return null;

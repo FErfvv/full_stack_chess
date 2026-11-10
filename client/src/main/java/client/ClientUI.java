@@ -95,6 +95,9 @@ public class ClientUI {
                     commandHandler.logout();
                     state = State.SIGNEDOUT;
                     break;
+                case "create":
+                    commandHandler.createGame(params);
+                    break;
             }
         } catch (BasicResponseException e) {
             System.out.println(new Gson().fromJson(e.getMessage(), ErrorResponseMessage.class).message());

@@ -31,5 +31,10 @@ public class CommandHandler {
         facade.logout();
     }
 
+    public void createGame(String[] params) throws BasicResponseException {
+        int gameID = facade.createGame(params);
+        System.out.println(gameID);
+    }
+
 
 }
