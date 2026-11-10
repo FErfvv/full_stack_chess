@@ -3,24 +3,31 @@ package client;
 import com.google.gson.Gson;
 import exceptions.BasicResponseException;
 import jdk.jshell.spi.ExecutionControl;
-import model.*;
+import model.AuthData;
+import model.requests.RegisterRequest;
 
 import java.net.*;
 import java.net.http.*;
-import java.net.http.HttpRequest.BodyPublisher;
-import java.net.http.HttpRequest.BodyPublishers;
-import java.net.http.HttpResponse.BodyHandlers;
 
 public class ServerFacade {
     private final HttpClient client = HttpClient.newHttpClient();
     private final String serverUrl;
+    private AuthData authData;
 
     public ServerFacade(String url) {
         serverUrl = url;
+        authData = null;
     }
 
-    public void register() throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Not yet implemented");
+    public AuthData register(String[] params) throws BasicResponseException {
+        HttpRequest request = buildRequest(
+                "POST",
+                "/user",
+                null,
+                new RegisterRequest(params[0], params[1], params[2]));
+        HttpResponse<String> response = sendRequest(request);
+        authData = handleResponse(response, AuthData.class);
+        return authData;
     }
 
     public void login() throws ExecutionControl.NotImplementedException {
@@ -55,7 +62,7 @@ public class ServerFacade {
         try {
             return client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception ex) {
-            throw new BasicResponseException(ex.getMessage(), 500);
+            throw new BasicResponseException("Error sending request: " + ex.getMessage(), 500);
         }
     }
 
@@ -78,5 +85,24 @@ public class ServerFacade {
         } else {
             return HttpRequest.BodyPublishers.noBody();
         }
+    }
+
+    public <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws BasicResponseException {
+        if (!isSuccessful(response.statusCode())) {
+            if (response.body() != null) {
+                throw new BasicResponseException(response.body(), response.statusCode());
+            }
+            throw new BasicResponseException("Error in receiving request", response.statusCode());
+        }
+
+        if (response.body() != null) {
+            return new Gson().fromJson(response.body(), responseClass);
+        }
+        return null;
+    }
+
+
+    private boolean isSuccessful(int statusCode) {
+        return statusCode == 200;
     }
 }

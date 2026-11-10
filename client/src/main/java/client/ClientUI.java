@@ -1,6 +1,9 @@
 package client;
 
+import com.google.gson.Gson;
 import exceptions.BasicResponseException;
+import model.AuthData;
+import model.ErrorResponseMessage;
 import ui.ClientGuiMap;
 import ui.EscapeSequences;
 
@@ -57,13 +60,31 @@ public class ClientUI {
     }
 
     private void handlePreLogin(String command, String[] params) throws BasicResponseException {
-        switch (command) {
-            case "register" -> commandHandler.register(params);
+        try {
+            switch (command) {
+                case "register":
+                    commandHandler.register(params);
+                    System.out.println("Successfully registered! Welcome " + params[0]);
+                    state = State.SIGNEDIN;
+                    break;
+                case "quit":
+                    System.out.println("Thank you for playing! Come again soon.");
+                    state = State.QUIT;
+                    break;
+            }
+        } catch (BasicResponseException e) {
+            System.out.println(new Gson().fromJson(e.getMessage(), ErrorResponseMessage.class).message());
         }
+
     }
 
     private void handlePostLogin(String command, String[] params) {
-        System.out.println(command);
+        switch (command) {
+            case "quit":
+                System.out.println("Thank you for playing! Come again soon.");
+                state = State.QUIT;
+                break;
+        }
     }
 
     private void help() {
