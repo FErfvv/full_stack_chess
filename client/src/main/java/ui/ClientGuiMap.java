@@ -12,6 +12,8 @@ import static chess.ChessPiece.PieceType.*;
 
 public class ClientGuiMap {
 
+    private static String[][][] boardRenderInfo = new String[10][10][3];
+
 
     public static String LoggedOutHelp() {
         return String.format("""
@@ -86,16 +88,18 @@ public class ClientGuiMap {
 
     public static String renderGame(ChessGame game, ChessGame.TeamColor team) {
         ChessPiece[][] board = game.getBoard().getMyBoard();
-        String[][][] boardRenderInfo = new String[10][10][3];
+
         StringBuilder renderedBoard = new StringBuilder();
-        for (int rowCoor = 0; rowCoor < boardRenderInfo.length; rowCoor++) {
-            for (int colCoor = 0; colCoor < boardRenderInfo[rowCoor].length; colCoor++) {
+        int startingValue = team == ChessGame.TeamColor.WHITE ? 0 : boardRenderInfo.length - 1;
+        int iterDirection = team == ChessGame.TeamColor.WHITE ? 1 : -1;
+        for (int rowCoor = startingValue; checkDirection(rowCoor, boardRenderInfo.length, iterDirection); rowCoor += iterDirection) {
+            for (int colCoor = startingValue; checkDirection(colCoor, boardRenderInfo.length, iterDirection); colCoor += iterDirection) {
                 if (rowCoor == 0 || rowCoor == 9) {
                     boardRenderInfo[rowCoor][colCoor][0] = getCharFromNumber(colCoor);
                     boardRenderInfo[rowCoor][colCoor][1] = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
                     boardRenderInfo[rowCoor][colCoor][2] = EscapeSequences.SET_TEXT_COLOR_BLACK;
                 } else if (colCoor == 0 || colCoor == 9) {
-                    boardRenderInfo[rowCoor][colCoor][0] = getNumber(colCoor);
+                    boardRenderInfo[rowCoor][colCoor][0] = getNumber(rowCoor);
                     boardRenderInfo[rowCoor][colCoor][1] = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
                     boardRenderInfo[rowCoor][colCoor][2] = EscapeSequences.SET_TEXT_COLOR_BLACK;
                 } else {
@@ -109,6 +113,10 @@ public class ClientGuiMap {
         return renderedBoard.toString();
     }
 
+    private static boolean checkDirection(int value, int stop, int direction) {
+        return direction == 1 ? value < stop : value >= 0;
+    }
+
     private static String renderCell(String[] info) {
         String cell = info[1] + info[2] + " ";
         cell += !Objects.equals(info[0], "") ? info[0] : " ";
@@ -119,6 +127,7 @@ public class ClientGuiMap {
     private static void addPiecesToRender(String[][][] boardRenderInfo, ChessPiece[][] myBoard, int row, int col) {
         if (myBoard[row - 1][col - 1] == null) {
             boardRenderInfo[row][col][0] = "";
+            boardRenderInfo[row][col][2] = "";
         } else {
             switch (myBoard[row - 1][col - 1].getPieceType()) {
                 case PAWN:
@@ -148,11 +157,11 @@ public class ClientGuiMap {
     }
 
     private static String getCharFromNumber(int i) {
-        return i > 0 && i < 9 ? String.valueOf((char) (i + 64)) : null;
+        return i > 0 && i < 9 ? String.valueOf((char) (i + 64)) : "";
     }
 
     private static String getNumber(int i) {
-        return i > 0 && i < 9 ? Integer.toString(i) : null;
+        return i > 0 && i < 9 ? Integer.toString(9 - i) : "";
     }
 
 }

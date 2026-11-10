@@ -27,7 +27,8 @@ public class ClientUI {
             entry("join", 2),
             entry("observe", 1),
             entry("logout", 0),
-            entry("help", 0)
+            entry("help", 0),
+            entry("test", 0)
     );
 
     public ClientUI(String url) {
