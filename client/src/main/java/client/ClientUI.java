@@ -64,16 +64,16 @@ public class ClientUI {
             switch (command) {
                 case "register":
                     commandHandler.register(params);
-                    System.out.println("Successfully registered! Welcome " + params[0]);
+                    System.out.print(ClientGuiMap.RegisteredMessage(params[0]));
                     state = State.SIGNEDIN;
                     break;
                 case "login":
                     commandHandler.login(params);
-                    System.out.println("Successfully logged in! Welcome " + params[0]);
+                    System.out.print(ClientGuiMap.LoggedInMessage(params[0]));
                     state = State.SIGNEDIN;
                     break;
                 case "quit":
-                    System.out.println("Thank you for playing! Come again soon.");
+                    System.out.print(ClientGuiMap.LoggedOutMessage());
                     state = State.QUIT;
                     break;
             }
@@ -87,7 +87,8 @@ public class ClientUI {
         try {
             switch (command) {
                 case "quit":
-                    System.out.println("Thank you for playing! Come again soon.");
+                    commandHandler.logout();
+                    System.out.println(ClientGuiMap.LoggedOutMessage());
                     state = State.QUIT;
                     break;
                 case "logout":

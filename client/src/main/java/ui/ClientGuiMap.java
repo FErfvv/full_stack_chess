@@ -48,4 +48,16 @@ public class ClientGuiMap {
                 EscapeSequences.RESET_TEXT_COLOR);
     }
 
+    public static String LoggedOutMessage() {
+        return String.format("%sThank you for playing! Come again soon.%s\n", EscapeSequences.SET_TEXT_COLOR_GREEN, EscapeSequences.RESET_TEXT_COLOR);
+    }
+
+    public static String LoggedInMessage(String name) {
+        return String.format("%sSuccessfully logged in! Welcome, %s%s\n", EscapeSequences.SET_TEXT_COLOR_GREEN, name, EscapeSequences.RESET_TEXT_COLOR);
+    }
+
+    public static String RegisteredMessage(String name) {
+        return String.format("%sSuccessfully registered! Welcome, %s%s\n", EscapeSequences.SET_TEXT_COLOR_GREEN, name, EscapeSequences.RESET_TEXT_COLOR);
+    }
+
 }
