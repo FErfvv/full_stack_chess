@@ -84,11 +84,19 @@ public class ClientUI {
     }
 
     private void handlePostLogin(String command, String[] params) {
-        switch (command) {
-            case "quit":
-                System.out.println("Thank you for playing! Come again soon.");
-                state = State.QUIT;
-                break;
+        try {
+            switch (command) {
+                case "quit":
+                    System.out.println("Thank you for playing! Come again soon.");
+                    state = State.QUIT;
+                    break;
+                case "logout":
+                    commandHandler.logout();
+                    state = State.SIGNEDOUT;
+                    break;
+            }
+        } catch (BasicResponseException e) {
+            System.out.println(new Gson().fromJson(e.getMessage(), ErrorResponseMessage.class).message());
         }
     }
 

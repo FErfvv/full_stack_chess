@@ -27,5 +27,9 @@ public class CommandHandler {
         facade.login(params);
     }
 
+    public void logout() throws BasicResponseException {
+        facade.logout();
+    }
+
 
 }

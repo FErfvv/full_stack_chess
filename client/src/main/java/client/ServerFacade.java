@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import exceptions.BasicResponseException;
 import jdk.jshell.spi.ExecutionControl;
 import model.AuthData;
+import model.requests.AuthRequest;
 import model.requests.LoginRequest;
 import model.requests.RegisterRequest;
 
@@ -40,8 +41,14 @@ public class ServerFacade {
         authData = handleResponse(response, AuthData.class);
     }
 
-    public void logout() throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Not yet implemented");
+    public void logout() throws BasicResponseException {
+        HttpRequest request = buildRequest(
+                "DELETE",
+                "/session",
+                authData.authToken(),
+                null);
+        HttpResponse<String> response = sendRequest(request);
+        handleResponse(response, null);
     }
 
     public void quit() throws ExecutionControl.NotImplementedException {
@@ -101,7 +108,7 @@ public class ServerFacade {
             throw new BasicResponseException("Error in receiving request", response.statusCode());
         }
 
-        if (response.body() != null) {
+        if (response.body() != null && responseClass != null) {
             return new Gson().fromJson(response.body(), responseClass);
         }
         return null;
