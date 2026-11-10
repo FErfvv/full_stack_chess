@@ -3,7 +3,7 @@ package service;
 import chess.ChessGame;
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
-import dataaccess.exceptions.*;
+import exceptions.*;
 import model.AuthData;
 import model.requests.*;
 import model.responses.GameListResponseData;

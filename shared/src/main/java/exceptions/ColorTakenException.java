@@ -1,4 +1,6 @@
-package dataaccess.exceptions;
+package exceptions;
+
+import exceptions.BasicResponseException;
 
 /**
  * Indicates the color requested was full

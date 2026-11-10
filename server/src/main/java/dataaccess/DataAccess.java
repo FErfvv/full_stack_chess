@@ -1,18 +1,14 @@
 package dataaccess;
 
-import dataaccess.exceptions.BadRequestException;
-import dataaccess.exceptions.ColorTakenException;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.NoGameException;
+import exceptions.BadRequestException;
+import exceptions.ColorTakenException;
+import exceptions.DataAccessException;
+import exceptions.NoGameException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import model.requests.AuthRequest;
-import model.requests.JoinGameRequest;
 import model.responses.GameListResponseData;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface DataAccess {

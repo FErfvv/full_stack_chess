@@ -1,7 +1,7 @@
 package dataaccess.sql;
 
 import chess.ChessGame;
-import dataaccess.exceptions.DataAccessException;
+import exceptions.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;

@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import exceptions.BasicResponseException;
 import jdk.jshell.spi.ExecutionControl;
 import model.*;
 
@@ -50,5 +51,32 @@ public class ServerFacade {
         throw new ExecutionControl.NotImplementedException("Not yet implemented");
     }
 
+    public HttpResponse<String> sendRequest(HttpRequest request) throws BasicResponseException {
+        try {
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception ex) {
+            throw new BasicResponseException(ex.getMessage(), 500);
+        }
+    }
 
+    public HttpRequest buildRequest(String method, String path, String authToken, Object body) {
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create(serverUrl + path))
+                .method(method, makeRequestBody(body));
+        if (body != null) {
+            request.setHeader("Content-Type", "application/json");
+        }
+        if (authToken != null) {
+            request.setHeader("Authorization", authToken);
+        }
+        return request.build();
+    }
+
+    private HttpRequest.BodyPublisher makeRequestBody(Object request) {
+        if (request != null) {
+            return HttpRequest.BodyPublishers.ofString(new Gson().toJson(request));
+        } else {
+            return HttpRequest.BodyPublishers.noBody();
+        }
+    }
 }

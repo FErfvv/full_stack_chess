@@ -1,20 +1,17 @@
 package dataaccess;
 
 import chess.ChessGame;
-import dataaccess.exceptions.BadRequestException;
-import dataaccess.exceptions.ColorTakenException;
-import dataaccess.exceptions.NoGameException;
+import exceptions.BadRequestException;
+import exceptions.ColorTakenException;
+import exceptions.NoGameException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import model.requests.JoinGameRequest;
 import model.responses.GameListResponseData;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class MemoryDataAccess implements DataAccess {
     private final HashMap<String, UserData> users = new HashMap<>();

@@ -2,7 +2,7 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.DataAccess;
-import dataaccess.exceptions.*;
+import exceptions.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -10,7 +10,6 @@ import model.requests.*;
 import model.responses.GameListResponseData;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 

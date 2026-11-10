@@ -1,7 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.exceptions.*;
+import exceptions.*;
 import io.javalin.*;
 import io.javalin.http.Context;
 import model.AuthData;

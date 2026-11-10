@@ -3,15 +3,10 @@ package dataaccess.sql;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
-import dataaccess.exceptions.BadRequestException;
-import dataaccess.exceptions.ColorTakenException;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.NoGameException;
-import kotlin.NotImplementedError;
+import exceptions.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import model.requests.JoinGameRequest;
 import model.responses.GameListResponseData;
 
 import java.sql.Connection;

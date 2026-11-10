@@ -1,4 +1,4 @@
-package dataaccess.exceptions;
+package exceptions;
 
 /**
  * Indicates the username was already taken
