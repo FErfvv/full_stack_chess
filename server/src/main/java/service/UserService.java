@@ -69,7 +69,7 @@ public class UserService {
             throws UnauthorizedException,
             ColorTakenException,
             NoGameException,
-            BadRequestException, DataAccessException, AlreadyJoinedException {
+            BadRequestException, DataAccessException {
         String username = myDataAccess.getAuth(authRequest.authToken());
         if (username == null) {
             throw new UnauthorizedException("unauthorized");
@@ -85,9 +85,6 @@ public class UserService {
             throw new BadRequestException();
         }
 
-        if (Objects.equals(user.username(), targetGame.blackUsername()) || Objects.equals(user.username(), targetGame.whiteUsername())) {
-            throw new AlreadyJoinedException();
-        }
         if (isBlack && targetGame.blackUsername() == null) {
             targetGame.setBlackUsername(user.username());
         } else if (isWhite && targetGame.whiteUsername() == null) {
