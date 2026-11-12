@@ -72,6 +72,10 @@ public class ClientGuiMap {
         return String.format("%sSuccessfully registered! Welcome, %s%s\n", EscapeSequences.SET_TEXT_COLOR_GREEN, name, EscapeSequences.RESET_TEXT_COLOR);
     }
 
+    public static String GameCreated() {
+        return String.format("%sSuccessfully created the game! Type <list> to see the game ID %s\n", EscapeSequences.SET_TEXT_COLOR_GREEN, EscapeSequences.RESET_TEXT_COLOR);
+    }
+
     public static String GameList(ListGamesResponse list) {
         StringBuilder myString = new StringBuilder();
         for (int i = 1; i < list.getGames().size(); i++) {

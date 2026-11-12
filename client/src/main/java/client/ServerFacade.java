@@ -87,6 +87,16 @@ public class ServerFacade {
         handleResponse(response, null, null);
     }
 
+    public void clear() throws BasicResponseException {
+        HttpRequest request = buildRequest(
+                "DELETE",
+                "/db",
+                null,
+                null);
+        HttpResponse<String> response = sendRequest(request);
+        handleResponse(response, null, null);
+    }
+
     public void observeGame() throws ExecutionControl.NotImplementedException {
         throw new ExecutionControl.NotImplementedException("Not yet implemented");
     }

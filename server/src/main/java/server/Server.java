@@ -78,7 +78,7 @@ public class Server {
         ctx.status(200);
     }
 
-    private static void clear(Context ctx) throws DataAccessException {
+    public static void clear(Context ctx) throws DataAccessException {
         ServerHandler.clearDb();
         ctx.status(200);
     }

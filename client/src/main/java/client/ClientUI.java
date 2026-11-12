@@ -107,10 +107,18 @@ public class ClientUI {
                     break;
                 case "join":
                     ChessGame game = commandHandler.joinGame(params);
-                    System.out.println(ClientGuiMap.renderGame(game, ChessGame.TeamColor.WHITE));
+                    ChessGame.TeamColor teamColor = Objects.equals(params[1], "white") ?
+                            ChessGame.TeamColor.WHITE :
+                            ChessGame.TeamColor.BLACK;
+                    System.out.println(ClientGuiMap.renderGame(game, teamColor));
+                    break;
+                case "observe":
+                    ChessGame newGame = commandHandler.joinGame(params);
+                    System.out.println(ClientGuiMap.renderGame(newGame, ChessGame.TeamColor.WHITE));
                     break;
                 case "create":
                     commandHandler.createGame(params);
+                    System.out.println(ClientGuiMap.GameCreated());
                     break;
 
             }
