@@ -1,6 +1,5 @@
 package ui;
 
-import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import model.responses.GameListResponseData;
@@ -8,14 +7,12 @@ import model.responses.ListGamesResponse;
 
 import java.util.Objects;
 
-import static chess.ChessPiece.PieceType.*;
-
 public class ClientGuiMap {
 
     private static String[][][] boardRenderInfo = new String[10][10][3];
 
 
-    public static String LoggedOutHelp() {
+    public static String loggedOutHelp() {
         return String.format("""
                         %sregister <USERNAME> <PASSWORD> <EMAIL>%s - to create an account
                         %slogin <USERNAME> <PASSWORD>%s - to play chess
@@ -33,7 +30,7 @@ public class ClientGuiMap {
                 EscapeSequences.RESET_TEXT_COLOR);
     }
 
-    public static String LoggedInHelp() {
+    public static String loggedInHelp() {
         return String.format("""
                         %screate <NAME>%s - a game
                         %slist%s - games
@@ -60,23 +57,33 @@ public class ClientGuiMap {
                 EscapeSequences.RESET_TEXT_COLOR);
     }
 
-    public static String LoggedOutMessage() {
-        return String.format("%sThank you for playing! Come again soon.%s\n", EscapeSequences.SET_TEXT_COLOR_GREEN, EscapeSequences.RESET_TEXT_COLOR);
+    public static String loggedOutMessage() {
+        return String.format("%sThank you for playing! Come again soon.%s\n",
+                EscapeSequences.SET_TEXT_COLOR_GREEN,
+                EscapeSequences.RESET_TEXT_COLOR);
     }
 
-    public static String LoggedInMessage(String name) {
-        return String.format("%sSuccessfully logged in! Welcome, %s%s\n", EscapeSequences.SET_TEXT_COLOR_GREEN, name, EscapeSequences.RESET_TEXT_COLOR);
+    public static String loggedInMessage(String name) {
+        return String.format("%sSuccessfully logged in! Welcome, %s%s\n",
+                EscapeSequences.SET_TEXT_COLOR_GREEN,
+                name,
+                EscapeSequences.RESET_TEXT_COLOR);
     }
 
-    public static String RegisteredMessage(String name) {
-        return String.format("%sSuccessfully registered! Welcome, %s%s\n", EscapeSequences.SET_TEXT_COLOR_GREEN, name, EscapeSequences.RESET_TEXT_COLOR);
+    public static String registeredMessage(String name) {
+        return String.format("%sSuccessfully registered! Welcome, %s%s\n",
+                EscapeSequences.SET_TEXT_COLOR_GREEN,
+                name,
+                EscapeSequences.RESET_TEXT_COLOR);
     }
 
-    public static String GameCreated() {
-        return String.format("%sSuccessfully created the game! Type <list> to see the game ID %s\n", EscapeSequences.SET_TEXT_COLOR_GREEN, EscapeSequences.RESET_TEXT_COLOR);
+    public static String gameCreated() {
+        return String.format("%sSuccessfully created the game! Type <list> to see the game ID %s\n",
+                EscapeSequences.SET_TEXT_COLOR_GREEN,
+                EscapeSequences.RESET_TEXT_COLOR);
     }
 
-    public static String GameList(ListGamesResponse list) {
+    public static String gameList(ListGamesResponse list) {
         StringBuilder myString = new StringBuilder();
         for (int i = 1; i < list.getGames().size(); i++) {
             GameListResponseData game = list.getGames().get(i);
@@ -84,7 +91,11 @@ public class ClientGuiMap {
                     Game %s: %s
                       - White: %s
                       - Black: %s
-                    """, i, game.gameName(), game.whiteUsername(), game.blackUsername());
+                    """,
+                    i,
+                    game.gameName(),
+                    game.whiteUsername(),
+                    game.blackUsername());
             myString.append(gameString);
         }
         return myString.toString();
@@ -108,7 +119,9 @@ public class ClientGuiMap {
                     boardRenderInfo[rowCoor][colCoor][2] = EscapeSequences.SET_TEXT_COLOR_BLACK;
                 } else {
                     addPiecesToRender(boardRenderInfo, board, rowCoor, colCoor);
-                    boardRenderInfo[rowCoor][colCoor][1] = (rowCoor + colCoor) % 2 == 0 ? EscapeSequences.SET_BG_COLOR_WHITE : EscapeSequences.SET_BG_COLOR_BLACK;
+                    boardRenderInfo[rowCoor][colCoor][1] = (rowCoor + colCoor) % 2 == 0 ?
+                            EscapeSequences.SET_BG_COLOR_WHITE :
+                            EscapeSequences.SET_BG_COLOR_BLACK;
                 }
                 renderedBoard.append(renderCell(boardRenderInfo[rowCoor][colCoor]));
             }

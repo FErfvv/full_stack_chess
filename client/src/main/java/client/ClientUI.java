@@ -3,11 +3,9 @@ package client;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import exceptions.BasicResponseException;
-import model.AuthData;
 import model.ErrorResponseMessage;
 import model.responses.ListGamesResponse;
 import ui.ClientGuiMap;
-import ui.EscapeSequences;
 
 import java.util.*;
 
@@ -67,16 +65,16 @@ public class ClientUI {
             switch (command) {
                 case "register":
                     commandHandler.register(params);
-                    System.out.print(ClientGuiMap.RegisteredMessage(params[0]));
+                    System.out.print(ClientGuiMap.registeredMessage(params[0]));
                     state = State.SIGNEDIN;
                     break;
                 case "login":
                     commandHandler.login(params);
-                    System.out.print(ClientGuiMap.LoggedInMessage(params[0]));
+                    System.out.print(ClientGuiMap.loggedInMessage(params[0]));
                     state = State.SIGNEDIN;
                     break;
                 case "quit":
-                    System.out.print(ClientGuiMap.LoggedOutMessage());
+                    System.out.print(ClientGuiMap.loggedOutMessage());
                     state = State.QUIT;
                     break;
                 case "test":
@@ -94,7 +92,7 @@ public class ClientUI {
             switch (command) {
                 case "quit":
                     commandHandler.logout();
-                    System.out.println(ClientGuiMap.LoggedOutMessage());
+                    System.out.println(ClientGuiMap.loggedOutMessage());
                     state = State.QUIT;
                     break;
                 case "logout":
@@ -103,7 +101,7 @@ public class ClientUI {
                     break;
                 case "list":
                     ListGamesResponse gameList = commandHandler.listGames();
-                    System.out.println(ClientGuiMap.GameList(gameList));
+                    System.out.println(ClientGuiMap.gameList(gameList));
                     break;
                 case "join":
                     ChessGame game = commandHandler.joinGame(params);
@@ -118,7 +116,7 @@ public class ClientUI {
                     break;
                 case "create":
                     commandHandler.createGame(params);
-                    System.out.println(ClientGuiMap.GameCreated());
+                    System.out.println(ClientGuiMap.gameCreated());
                     break;
 
             }
@@ -129,9 +127,9 @@ public class ClientUI {
 
     private void help() {
         if (state == State.SIGNEDOUT) {
-            System.out.println(ClientGuiMap.LoggedOutHelp());
+            System.out.println(ClientGuiMap.loggedOutHelp());
         } else {
-            System.out.println(ClientGuiMap.LoggedInHelp());
+            System.out.println(ClientGuiMap.loggedInHelp());
         }
     }
 

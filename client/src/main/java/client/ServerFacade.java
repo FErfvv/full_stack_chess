@@ -97,10 +97,6 @@ public class ServerFacade {
         handleResponse(response, null, null);
     }
 
-    public void observeGame() throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Not yet implemented");
-    }
-
     public HttpResponse<String> sendRequest(HttpRequest request) throws BasicResponseException {
         try {
             return client.send(request, HttpResponse.BodyHandlers.ofString());
