@@ -87,8 +87,6 @@ public class UserService {
             targetGame.setBlackUsername(user.username());
         } else if (isWhite && targetGame.whiteUsername() == null) {
             targetGame.setWhiteUsername(user.username());
-        } else {
-            throw new ColorTakenException();
         }
         myDataAccess.updateGame(targetGame);
     }

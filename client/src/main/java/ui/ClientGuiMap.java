@@ -83,15 +83,24 @@ public class ClientGuiMap {
                 EscapeSequences.RESET_TEXT_COLOR);
     }
 
+    public static String failedObserve() {
+        return String.format("%sThe requested game is not full, you can only observe a full game. %s\n",
+                EscapeSequences.SET_TEXT_COLOR_GREEN,
+                EscapeSequences.RESET_TEXT_COLOR);
+    }
+
     public static String gameList(ListGamesResponse list) {
         StringBuilder myString = new StringBuilder();
-        for (int i = 1; i < list.getGames().size(); i++) {
-            GameListResponseData game = list.getGames().get(i);
+        if (list.getGames().isEmpty()) {
+            return "There are currently no games available.\n";
+        }
+        for (int i = 1; i <= list.getGames().size(); i++) {
+            GameListResponseData game = list.getGames().get(i - 1);
             String gameString = String.format("""
-                    Game %s: %s
-                      - White: %s
-                      - Black: %s
-                    """,
+                            Game %s: %s
+                              - White: %s
+                              - Black: %s
+                            """,
                     i,
                     game.gameName(),
                     game.whiteUsername(),

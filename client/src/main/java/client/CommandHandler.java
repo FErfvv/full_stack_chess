@@ -48,11 +48,30 @@ public class CommandHandler {
 
     public ChessGame joinGame(String[] params) throws BasicResponseException {
         int gameId = Integer.parseInt(params[0]);
+        gameList = facade.listGames();
         if (gameList != null && gameList.getGames().size() > gameId) {
-            gameId = gameList.getGames().get(gameId).gameID();
+            gameId = gameList.getGames().get(gameId - 1).gameID();
         }
+
         String playerColor = params[1].toUpperCase();
         facade.joinGame(playerColor, Integer.toString(gameId));
+        currentGame = new ChessGame();
+        return currentGame;
+    }
+
+    public ChessGame observeGame(String[] params) throws BasicResponseException {
+        int gameId = Integer.parseInt(params[0]);
+        gameList = facade.listGames();
+        if (gameList != null && gameList.getGames().size() >= gameId) {
+            gameId = gameList.getGames().get(gameId - 1).gameID();
+            // If the game is not full, return null to indicate a failure
+            if (gameList.getGames().get(gameId - 1).blackUsername() == null ||
+                    gameList.getGames().get(gameId - 1).whiteUsername() == null) {
+                return null;
+            }
+        }
+
+        facade.joinGame("WHITE", Integer.toString(gameId));
         currentGame = new ChessGame();
         return currentGame;
     }

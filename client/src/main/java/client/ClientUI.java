@@ -98,22 +98,26 @@ public class ClientUI {
                     break;
                 case "list":
                     ListGamesResponse gameList = commandHandler.listGames();
-                    System.out.println(ClientGuiMap.gameList(gameList));
+                    System.out.print(ClientGuiMap.gameList(gameList));
                     break;
                 case "join":
                     ChessGame game = commandHandler.joinGame(params);
                     ChessGame.TeamColor teamColor = Objects.equals(params[1], "white") ?
                             ChessGame.TeamColor.WHITE :
                             ChessGame.TeamColor.BLACK;
-                    System.out.println(ClientGuiMap.renderGame(game, teamColor));
+                    System.out.print(ClientGuiMap.renderGame(game, teamColor));
                     break;
                 case "observe":
-                    ChessGame newGame = commandHandler.joinGame(params);
-                    System.out.println(ClientGuiMap.renderGame(newGame, ChessGame.TeamColor.WHITE));
+                    ChessGame newGame = commandHandler.observeGame(params);
+                    if (newGame == null) {
+                        System.out.print(ClientGuiMap.failedObserve());
+                    } else {
+                        System.out.print(ClientGuiMap.renderGame(newGame, ChessGame.TeamColor.WHITE));
+                    }
                     break;
                 case "create":
                     commandHandler.createGame(params);
-                    System.out.println(ClientGuiMap.gameCreated());
+                    System.out.print(ClientGuiMap.gameCreated());
                     break;
 
             }
