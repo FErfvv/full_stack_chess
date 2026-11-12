@@ -73,7 +73,6 @@ public class Server {
             BadRequestException,
             NoGameException,
             DataAccessException {
-        System.out.println(ctx.body());
         ServerHandler.addUserToGame(Objects.requireNonNull(ctx.header("Authorization")), ctx.body());
         ctx.status(200);
     }
