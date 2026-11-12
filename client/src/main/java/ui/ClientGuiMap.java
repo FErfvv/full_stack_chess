@@ -83,12 +83,6 @@ public class ClientGuiMap {
                 EscapeSequences.RESET_TEXT_COLOR);
     }
 
-    public static String failedObserve() {
-        return String.format("%sThe requested game is not full, you can only observe a full game. %s\n",
-                EscapeSequences.SET_TEXT_COLOR_GREEN,
-                EscapeSequences.RESET_TEXT_COLOR);
-    }
-
     public static String gameList(ListGamesResponse list) {
         StringBuilder myString = new StringBuilder();
         if (list.getGames().isEmpty()) {

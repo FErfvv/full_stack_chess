@@ -116,7 +116,9 @@ public class ClientUI {
                     break;
                 case "observe":
                     GameListResponseData gameData = commandHandler.observeGame(params);
-                    System.out.print(ClientGuiMap.renderGame(new ChessGame(), ChessGame.TeamColor.WHITE, String.format("Observing game: %s", gameData.gameName())));
+                    System.out.print(ClientGuiMap.renderGame(new ChessGame(),
+                            ChessGame.TeamColor.WHITE,
+                            String.format("Observing game: %s", gameData.gameName())));
                     break;
                 case "create":
                     commandHandler.createGame(params);
