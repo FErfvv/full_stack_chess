@@ -49,7 +49,7 @@ public class CommandHandler {
     public ChessGame joinGame(String[] params) throws BasicResponseException {
         int gameId = Integer.parseInt(params[0]);
         gameList = facade.listGames();
-        if (gameList != null && gameList.getGames().size() > gameId) {
+        if (gameList != null && gameList.getGames().size() >= gameId && gameId > 0) {
             gameId = gameList.getGames().get(gameId - 1).gameID();
         }
 
@@ -59,21 +59,19 @@ public class CommandHandler {
         return currentGame;
     }
 
-    public ChessGame observeGame(String[] params) throws BasicResponseException {
+    public GameListResponseData observeGame(String[] params) throws BasicResponseException {
         int gameId = Integer.parseInt(params[0]);
         gameList = facade.listGames();
-        if (gameList != null && gameList.getGames().size() >= gameId) {
+        if (gameList == null) {
+            throw new BasicResponseException("{ 'message': 'Error: there are currently no games to observe.'}", 403);
+        }
+        if (gameList.getGames().size() >= gameId && gameId > 0) {
             gameId = gameList.getGames().get(gameId - 1).gameID();
-            // If the game is not full, return null to indicate a failure
-            if (gameList.getGames().get(gameId - 1).blackUsername() == null ||
-                    gameList.getGames().get(gameId - 1).whiteUsername() == null) {
-                return null;
-            }
+        } else {
+            throw new BasicResponseException("{ 'message': 'Error: requested game does not exist.'} ", 403);
         }
 
-        facade.joinGame("WHITE", Integer.toString(gameId));
-        currentGame = new ChessGame();
-        return currentGame;
+        return gameList.getGames().get(gameId - 1);
     }
 
 

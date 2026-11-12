@@ -64,7 +64,7 @@ public class ServerHandler {
             throws BadRequestException,
             ColorTakenException,
             UnauthorizedException,
-            NoGameException, DataAccessException {
+            NoGameException, DataAccessException, AlreadyJoinedException {
         if (authToken.isEmpty()) {
             throw new BadRequestException();
         }

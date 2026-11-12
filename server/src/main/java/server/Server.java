@@ -72,7 +72,7 @@ public class Server {
             UnauthorizedException,
             BadRequestException,
             NoGameException,
-            DataAccessException {
+            DataAccessException, AlreadyJoinedException {
         ServerHandler.addUserToGame(Objects.requireNonNull(ctx.header("Authorization")), ctx.body());
         ctx.status(200);
     }

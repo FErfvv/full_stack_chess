@@ -110,10 +110,11 @@ public class ClientGuiMap {
         return myString.toString();
     }
 
-    public static String renderGame(ChessGame game, ChessGame.TeamColor team) {
+    public static String renderGame(ChessGame game, ChessGame.TeamColor team, String message) {
         ChessPiece[][] board = game.getBoard().getMyBoard();
 
         StringBuilder renderedBoard = new StringBuilder();
+        renderedBoard.append(message).append("\n");
         int startingValue = team == ChessGame.TeamColor.WHITE ? 0 : boardRenderInfo.length - 1;
         int iterDirection = team == ChessGame.TeamColor.WHITE ? 1 : -1;
         for (int rowCoor = startingValue; checkDirection(rowCoor, boardRenderInfo.length, iterDirection); rowCoor += iterDirection) {

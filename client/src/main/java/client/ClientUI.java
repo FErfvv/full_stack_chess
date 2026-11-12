@@ -4,6 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import exceptions.BasicResponseException;
 import model.ErrorResponseMessage;
+import model.responses.GameListResponseData;
 import model.responses.ListGamesResponse;
 import ui.ClientGuiMap;
 
@@ -16,17 +17,21 @@ public class ClientUI {
     private String serverUrl;
     private CommandHandler commandHandler;
 
-    private static final Map<String, Integer> COMMAND_LIST = Map.ofEntries(
+    private static final Map<String, Integer> PRE_LOGIN_CMDS = Map.ofEntries(
             entry("register", 3),
             entry("login", 2),
+            entry("quit", 0),
+            entry("help", 0)
+    );
+
+    private static final Map<String, Integer> POST_LOGIN_CMDS = Map.ofEntries(
             entry("quit", 0),
             entry("create", 1),
             entry("list", 0),
             entry("join", 2),
             entry("observe", 1),
             entry("logout", 0),
-            entry("help", 0),
-            entry("test", 0)
+            entry("help", 0)
     );
 
     public ClientUI(String url) {
@@ -46,15 +51,17 @@ public class ClientUI {
             String[] tokens = input.toLowerCase().split(" ");
             String cmd = (tokens.length > 0) ? tokens[0] : "help";
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-            if (!checkParams(cmd, params)) {
-                System.out.println("Invalid command or paramaters, please try again");
-                continue;
-            }
             if (Objects.equals(cmd, "help")) {
                 help();
             } else if (state == State.SIGNEDOUT) {
+                if (isInvalidCommand(cmd, params, PRE_LOGIN_CMDS)) {
+                    continue;
+                }
                 handlePreLogin(cmd, params);
             } else {
+                if (isInvalidCommand(cmd, params, POST_LOGIN_CMDS)) {
+                    continue;
+                }
                 handlePostLogin(cmd, params);
             }
         }
@@ -105,15 +112,11 @@ public class ClientUI {
                     ChessGame.TeamColor teamColor = Objects.equals(params[1], "white") ?
                             ChessGame.TeamColor.WHITE :
                             ChessGame.TeamColor.BLACK;
-                    System.out.print(ClientGuiMap.renderGame(game, teamColor));
+                    System.out.print(ClientGuiMap.renderGame(game, teamColor, String.format("Playing as player %s", teamColor)));
                     break;
                 case "observe":
-                    ChessGame newGame = commandHandler.observeGame(params);
-                    if (newGame == null) {
-                        System.out.print(ClientGuiMap.failedObserve());
-                    } else {
-                        System.out.print(ClientGuiMap.renderGame(newGame, ChessGame.TeamColor.WHITE));
-                    }
+                    GameListResponseData gameData = commandHandler.observeGame(params);
+                    System.out.print(ClientGuiMap.renderGame(new ChessGame(), ChessGame.TeamColor.WHITE, String.format("Observing game: %s", gameData.gameName())));
                     break;
                 case "create":
                     commandHandler.createGame(params);
@@ -134,12 +137,15 @@ public class ClientUI {
         }
     }
 
-    private boolean checkParams(String command, String[] params) {
-        if (!COMMAND_LIST.containsKey(command)) {
-            return false;
+    private boolean isInvalidCommand(String cmd, String[] params, Map<String, Integer> commandList) {
+        if (!commandList.containsKey(cmd)) {
+            System.out.printf("The command '%s' is an invalid command, please try again\n", cmd);
+            return true;
+        } else if (commandList.get(cmd) != params.length) {
+            System.out.printf("The parameter length %s is an invalid for the command '%s', please try again\n", params.length, cmd);
+            return true;
         }
-        return COMMAND_LIST.get(command) == params.length;
+        return false;
     }
-
 
 }

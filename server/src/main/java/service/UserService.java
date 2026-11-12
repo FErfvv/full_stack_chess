@@ -11,6 +11,7 @@ import model.responses.GameListResponseData;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
@@ -39,7 +40,7 @@ public class UserService {
             throw new UnauthorizedException(String.format("Username '%s' does not exist", loginRequest.username()));
         }
         if (!BCrypt.checkpw(loginRequest.password(), currentUser.password())) {
-            throw new UnauthorizedException(String.format("Password '%s' is incorrect", loginRequest.username()));
+            throw new UnauthorizedException(String.format("Password is incorrect"));
         }
         AuthData myAuthData = new AuthData(currentUser.username(), generateToken());
         myDataAccess.createAuth(myAuthData);
@@ -68,7 +69,7 @@ public class UserService {
             throws UnauthorizedException,
             ColorTakenException,
             NoGameException,
-            BadRequestException, DataAccessException {
+            BadRequestException, DataAccessException, AlreadyJoinedException {
         String username = myDataAccess.getAuth(authRequest.authToken());
         if (username == null) {
             throw new UnauthorizedException("unauthorized");
@@ -83,10 +84,16 @@ public class UserService {
         if (!isBlack && !isWhite) {
             throw new BadRequestException();
         }
+
+        if (Objects.equals(user.username(), targetGame.blackUsername()) || Objects.equals(user.username(), targetGame.whiteUsername())) {
+            throw new AlreadyJoinedException();
+        }
         if (isBlack && targetGame.blackUsername() == null) {
             targetGame.setBlackUsername(user.username());
         } else if (isWhite && targetGame.whiteUsername() == null) {
             targetGame.setWhiteUsername(user.username());
+        } else {
+            throw new ColorTakenException();
         }
         myDataAccess.updateGame(targetGame);
     }
