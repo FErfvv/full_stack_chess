@@ -77,9 +77,6 @@ public class ClientUI {
                     System.out.print(ClientGuiMap.loggedOutMessage());
                     state = State.QUIT;
                     break;
-                case "test":
-                    System.out.println(ClientGuiMap.renderGame(new ChessGame(), ChessGame.TeamColor.WHITE));
-                    break;
             }
         } catch (BasicResponseException e) {
             System.out.println(new Gson().fromJson(e.getMessage(), ErrorResponseMessage.class).message());
