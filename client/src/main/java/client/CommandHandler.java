@@ -47,7 +47,12 @@ public class CommandHandler {
     }
 
     public ChessGame joinGame(String[] params) throws BasicResponseException {
-        int gameId = Integer.parseInt(params[0]);
+        int gameId;
+        try {
+            gameId = Integer.parseInt(params[0]);
+        } catch (Exception e) {
+            throw new BasicResponseException("{'message':'Error: the game ID needs to be a valid integer'}", 400);
+        }
         gameList = facade.listGames();
         if (gameList != null && gameList.getGames().size() >= gameId && gameId > 0) {
             gameId = gameList.getGames().get(gameId - 1).gameID();
